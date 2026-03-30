@@ -32,15 +32,18 @@ export class AdminController {
   @UseGuards(AdminGuard)
   getTeams(
     @Param('slug') slug: string,
+    @Req() req: Request,
     @Query('status') status?: string,
   ) {
-    return this.adminService.getTeamsByTournament(slug, status);
+    const transportKey = (req as any).adminPayload?.tk;
+    return this.adminService.getTeamsByTournament(slug, status, transportKey);
   }
 
   @Get('teams/:id')
   @UseGuards(AdminGuard)
-  getTeamDetail(@Param('id') id: string) {
-    return this.adminService.getTeamDetail(id);
+  getTeamDetail(@Param('id') id: string, @Req() req: Request) {
+    const transportKey = (req as any).adminPayload?.tk;
+    return this.adminService.getTeamDetail(id, transportKey);
   }
 
   @Patch('teams/:id/review')

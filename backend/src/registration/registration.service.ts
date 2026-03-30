@@ -5,42 +5,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterTeamDto, PlayerRole } from './dto/register-team.dto';
-import { createHash } from 'crypto';
+import { encrypt } from '../common/crypto.util';
 
 @Injectable()
 export class RegistrationService {
   constructor(private prisma: PrismaService) {}
 
-  private hashNationalId(nationalId: string, tournamentId: string): string {
-    // Use tournament ID as salt so same person gets same hash within a tournament
-    return createHash('sha256')
-      .update(`${tournamentId}:${nationalId}`)
-      .digest('hex');
-  }
-
-  private validateTaiwanNationalId(id: string): boolean {
-    // 支援舊式(1,2) + 新式居留證(8,9)
-    if (!/^[A-Z][1289]\d{8}$/.test(id)) return false;
-
-    const letterMap: Record<string, number> = {
-      A: 10, B: 11, C: 12, D: 13, E: 14, F: 15, G: 16, H: 17,
-      I: 34, J: 18, K: 19, L: 20, M: 21, N: 22, O: 35, P: 23,
-      Q: 24, R: 25, S: 26, T: 27, U: 28, V: 29, W: 32, X: 30,
-      Y: 31, Z: 33,
-    };
-
-    const letterValue = letterMap[id[0]];
-    const n1 = Math.floor(letterValue / 10);
-    const n2 = letterValue % 10;
-
-    const weights = [1, 9, 8, 7, 6, 5, 4, 3, 2, 1];
-    let sum = n1 + n2 * 9;
-
-    for (let i = 1; i < 10; i++) {
-      sum += parseInt(id[i]) * weights[i];
-    }
-
-    return sum % 10 === 0;
+  private encryptNationalId(nationalId: string): string {
+    return encrypt(nationalId);
   }
 
   async register(slug: string, dto: RegisterTeamDto) {
@@ -61,7 +33,7 @@ export class RegistrationService {
       throw new BadRequestException('報名已截止');
     }
 
-    // 3. Validate player role composition: 1 CAPTAIN + 5 STARTER + 0~2 SUBSTITUTE
+    // 3. Validate player role composition: 1 CAPTAIN + 4 STARTER + 1~2 SUBSTITUTE
     const roleCounts = dto.players.reduce(
       (acc, p) => {
         acc[p.role] = (acc[p.role] || 0) + 1;
@@ -73,51 +45,23 @@ export class RegistrationService {
     if (roleCounts[PlayerRole.CAPTAIN] !== 1) {
       throw new BadRequestException('必須恰好有 1 名隊長 (CAPTAIN)');
     }
-    if (roleCounts[PlayerRole.STARTER] !== 5) {
-      throw new BadRequestException('必須恰好有 5 名先發 (STARTER)');
+    if (roleCounts[PlayerRole.STARTER] !== 3) {
+      throw new BadRequestException('必須恰好有 3 名隊員 (STARTER)');
     }
     const subCount = roleCounts[PlayerRole.SUBSTITUTE] || 0;
     if (subCount > 2) {
-      throw new BadRequestException('替補最多 2 名 (SUBSTITUTE)');
+      throw new BadRequestException('候補隊員最多 2 名 (SUBSTITUTE)');
     }
 
-    // 4. Validate national IDs (checksum)
+    // 4. Validate national IDs (length only)
     for (const player of dto.players) {
-      if (!this.validateTaiwanNationalId(player.nationalId)) {
+      if (!player.nationalId || player.nationalId.length !== 10) {
         throw new BadRequestException(
-          `選手「${player.name}」的身分證字號格式不正確`,
+          `選手「${player.name}」的身分證字號長度須為 10 碼`,
         );
       }
     }
 
-    // 5. Check for duplicate national IDs within this submission
-    const nationalIds = dto.players.map((p) => p.nationalId);
-    const uniqueIds = new Set(nationalIds);
-    if (uniqueIds.size !== nationalIds.length) {
-      throw new BadRequestException('同一隊伍中不可有重複的身分證字號');
-    }
-
-    // 6. Hash national IDs and check for duplicates across teams in this tournament
-    const hashes = dto.players.map((p) =>
-      this.hashNationalId(p.nationalId, tournament.id),
-    );
-
-    const existingPlayers = await this.prisma.player.findMany({
-      where: {
-        tournamentId: tournament.id,
-        nationalIdHash: { in: hashes },
-      },
-      include: { team: { select: { teamName: true } } },
-    });
-
-    if (existingPlayers.length > 0) {
-      const names = existingPlayers.map(
-        (p) => `${p.name}（已在隊伍「${p.team.teamName}」中）`,
-      );
-      throw new BadRequestException(
-        `以下選手已在本屆賽事中報名：${names.join('、')}`,
-      );
-    }
 
     // 7. Create team + players in a transaction
     const team = await this.prisma.$transaction(async (tx) => {
@@ -136,7 +80,7 @@ export class RegistrationService {
           tournamentId: tournament.id,
           name: p.name,
           phone: p.phone,
-          nationalIdHash: this.hashNationalId(p.nationalId, tournament.id),
+          nationalIdHash: this.encryptNationalId(p.nationalId),
           role: p.role,
           sortOrder: index,
         })),
@@ -151,7 +95,7 @@ export class RegistrationService {
         teamId: team.id,
         teamName: team.teamName,
         status: team.status,
-        message: '報名成功，請等待審核。',
+        message: '報名已送出，請等待確認。',
       },
     };
   }
@@ -166,7 +110,14 @@ export class RegistrationService {
 
     const teams = await this.prisma.team.findMany({
       where: { tournamentId: tournament.id },
-      select: { teamName: true, status: true },
+      select: {
+        teamName: true,
+        status: true,
+        players: {
+          select: { name: true, role: true },
+          orderBy: { sortOrder: 'asc' },
+        },
+      },
       orderBy: { createdAt: 'asc' },
     });
 

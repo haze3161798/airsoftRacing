@@ -23,7 +23,14 @@
       "Bash(mv tmp-slug:*)",
       "Bash(taskkill //F //IM node.exe)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git remote:*)",
+      "Bash(grep -E \"\\\\.env$\")",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(find c:UsersJayDesktopAJairsoftRacing -maxdepth 3 -type f \\\\\\(-name nginx* -o -name *.conf -o -name *.yml -o -name *.yaml \\\\\\) ! -path */node_modules/*)",
+      "Bash(npm run:*)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Jay\\Desktop\\AJ\\airsoftRacing"

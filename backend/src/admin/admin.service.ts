@@ -7,6 +7,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { ReviewTeamDto } from './dto/review-team.dto';
+import { decrypt } from '../common/crypto.util';
+import { generateTransportKey, transportEncrypt } from '../common/transport-crypto';
 
 // Simple brute-force protection
 const loginAttempts = new Map<string, { count: number; lockedUntil: number }>();
@@ -48,11 +50,12 @@ export class AdminService {
     // Reset on success
     loginAttempts.delete(ip);
 
-    const token = await this.jwtService.signAsync({ sub: 'admin' });
-    return { accessToken: token };
+    const transportKey = generateTransportKey();
+    const token = await this.jwtService.signAsync({ sub: 'admin', tk: transportKey });
+    return { accessToken: token, transportKey };
   }
 
-  async getTeamsByTournament(slug: string, status?: string) {
+  async getTeamsByTournament(slug: string, status?: string, transportKey?: string) {
     const tournament = await this.prisma.tournament.findUnique({
       where: { slug },
     });
@@ -65,7 +68,7 @@ export class AdminService {
       where.status = status;
     }
 
-    return this.prisma.team.findMany({
+    const teams = await this.prisma.team.findMany({
       where,
       include: {
         players: {
@@ -74,6 +77,7 @@ export class AdminService {
             id: true,
             name: true,
             phone: true,
+            nationalIdHash: true,
             role: true,
             sortOrder: true,
           },
@@ -81,9 +85,30 @@ export class AdminService {
       },
       orderBy: { createdAt: 'asc' },
     });
+
+    // Decrypt from DB, then re-encrypt with transport key for response
+    return teams.map((team) => ({
+      ...team,
+      players: team.players.map((p) => {
+        const plain = this.decryptNationalId(p.nationalIdHash);
+        return {
+          ...p,
+          nationalId: transportKey ? transportEncrypt(plain, transportKey) : undefined,
+          nationalIdHash: undefined,
+        };
+      }),
+    }));
   }
 
-  async getTeamDetail(id: string) {
+  private decryptNationalId(encrypted: string): string {
+    try {
+      return decrypt(encrypted);
+    } catch {
+      return '(無法解密)';
+    }
+  }
+
+  async getTeamDetail(id: string, transportKey?: string) {
     const team = await this.prisma.team.findUnique({
       where: { id },
       include: {
@@ -96,7 +121,17 @@ export class AdminService {
     if (!team) {
       throw new NotFoundException('隊伍不存在');
     }
-    return team;
+    return {
+      ...team,
+      players: team.players.map((p) => {
+        const plain = this.decryptNationalId(p.nationalIdHash);
+        return {
+          ...p,
+          nationalId: transportKey ? transportEncrypt(plain, transportKey) : undefined,
+          nationalIdHash: undefined,
+        };
+      }),
+    };
   }
 
   async reviewTeam(id: string, dto: ReviewTeamDto) {

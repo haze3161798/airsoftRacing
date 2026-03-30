@@ -61,7 +61,6 @@ model Player {
   team       Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
   tournament Tournament @relation(fields: [tournamentId], references: [id])
 
-  @@unique([tournamentId, nationalIdHash])
   @@index([teamId])
   @@map("player")
 }

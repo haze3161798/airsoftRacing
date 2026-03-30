@@ -14,13 +14,13 @@ async function main() {
   const season1 = await prisma.tournament.create({
     data: {
       slug: 'season-1',
-      name: '第一屆氣槍競速賽',
+      name: '第一屆 極限速度杯\nAirsoft Contest',
       description:
-        '歡迎參加第一屆氣槍競速電競賽事！\n\n本賽事採用 5v5 競速模式，每隊需有 1 名隊長、5 名先發選手及 2 名替補選手。\n報名後請依指示完成繳費，經主辦方審核通過即完成報名。',
+        '【第一屆類 Speedsoft 賽事報名資訊】\n\n歡迎報名第一屆類 Speedsoft 賽事。本賽事採用 4v4 搶旗模式，並依據賽事積分進行排名。\n\n報名編制：每支隊伍須由 1 名隊長及 3 名正式隊員組成，並可視需求增報最多 2 名替補人員。\n早鳥獎勵：凡於 5 月 4 日（含）前完成報名手續並成功繳費之隊伍，將額外獲贈店家折扣禮券。',
       rulesPdfUrl: '/public/rules-season-1.pdf',
       bannerUrl: '/public/hero-banner.svg',
       registrationOpenAt: new Date('2026-03-01T00:00:00+08:00'),
-      registrationCloseAt: new Date('2026-12-31T23:59:59+08:00'),
+      registrationCloseAt: new Date('2026-05-12T23:59:59+08:00'),
       isActive: true,
     },
   });

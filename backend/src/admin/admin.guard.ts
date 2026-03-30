@@ -20,7 +20,8 @@ export class AdminGuard implements CanActivate {
     }
 
     try {
-      await this.jwtService.verifyAsync(token);
+      const payload = await this.jwtService.verifyAsync(token);
+      (request as any).adminPayload = payload;
       return true;
     } catch {
       throw new UnauthorizedException('登入已過期，請重新登入');
