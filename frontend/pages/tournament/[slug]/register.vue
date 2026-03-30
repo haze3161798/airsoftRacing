@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-
+      <div class="text-red-600 text-sm my-3">「本次比賽為 4 v 4 賽制。請將隊長與三位正式隊員的資料，確實填寫於【隊長】與【隊員】欄位。如有候補隊員（0~2 名），請於表單最下方的專屬區塊填寫。感謝您的配合！」</div>
     <!-- Step 2: Player Info -->
     <div v-show="currentStep === 1" class="space-y-4">
       <!-- Required players: Captain + Starters -->
@@ -110,19 +110,19 @@
       <!-- Substitute section -->
       <div class="border-t border-surface-border pt-6 mt-6">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold text-white">替補選手 <span class="text-sm font-normal text-gray-400">（選填，0~2 名）</span></h3>
+          <h3 class="text-lg font-bold text-white">候補隊員選手 <span class="text-sm font-normal text-gray-400">（選填，0~2 名）</span></h3>
           <button
             v-if="substitutes.length < 2"
             type="button"
             class="text-sm text-primary hover:text-primary-400 font-semibold transition-colors"
             @click="addSubstitute"
           >
-            + 新增替補
+            + 新增候補隊員
           </button>
         </div>
 
         <div v-if="!substitutes.length" class="text-center py-6 text-gray-500 text-sm bg-surface-light border border-dashed border-surface-border rounded-xl">
-          尚未新增替補選手（可跳過）
+          尚未新增候補隊員選手（可跳過）
         </div>
 
         <div
@@ -132,7 +132,7 @@
         >
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-base font-bold text-white">
-              <span class="text-accent-pending">替補</span>
+              <span class="text-accent-pending">候補隊員</span>
               <span class="text-gray-400 font-normal text-sm ml-2">#{{ si + 1 }}</span>
             </h3>
             <button
@@ -175,26 +175,27 @@
               />
             </div>
           </div>
-          <p v-if="errors.players?.[6 + si]" class="text-accent-failed text-xs mt-2">{{ errors.players[6 + si] }}</p>
+          <p v-if="errors.players?.[4 + si]" class="text-accent-failed text-xs mt-2">{{ errors.players[4 + si] }}</p>
         </div>
       </div>
     </div>
 
     <!-- Step 3: Payment + Confirm -->
     <div v-show="currentStep === 2" class="space-y-6">
-      <!-- Payment Note -->
+
+      <!-- Payment Info -->
       <div class="bg-surface-light border border-surface-border rounded-xl p-6">
         <h2 class="text-lg font-bold text-white mb-4">繳費資訊</h2>
-        <p class="text-gray-400 text-sm mb-4">匯款完成後，請填入轉帳後五碼以利對帳，並截圖私訊主辦單位。</p>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">轉帳備註（後五碼）</label>
-          <input
-            v-model="form.paymentNote"
-            type="text"
-            maxlength="200"
-            placeholder="例如：12345"
-            class="w-full bg-surface border border-surface-border rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-          />
+        <div class="space-y-3 text-sm text-gray-300">
+          <p>每隊報名費：<span class="text-white font-semibold">5,500 元</span></p>
+          <p>收款人：<span class="text-white font-semibold">吳文元</span></p>
+          <p>匯款資料：<span class="text-white font-semibold">（700）00410771562859</span></p>
+          <p class="text-accent-pending">付款後請向收款人進行資料核對，核對完成後就完美報名成功了！</p>
+          <p>收款人聯絡方式：<span class="text-white font-semibold">電話 0906808397</span>（可用電話加 Line）</p>
+          <p>隊長集合群組：<a href="https://line.me/ti/g/yL3sg8S8ky" target="_blank" rel="noopener" class="text-primary hover:text-primary-400 underline transition-colors">點此加入</a></p>
+        </div>
+        <div class="mt-4 flex justify-center">
+          <img :src="qrCodeSrc" alt="LINE QR Code" class="w-48 h-48 rounded-lg" />
         </div>
       </div>
 
@@ -238,7 +239,7 @@
         </svg>
       </div>
       <h2 class="text-2xl font-bold text-white mb-2">報名成功！</h2>
-      <p class="text-gray-400 mb-6">您的隊伍已進入審核流程，請留意後續通知。</p>
+      <p class="text-gray-400 mb-6">您的隊伍已送出報名，請留意後續通知。</p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <NuxtLink
           :to="`/tournament/${slug}/teams`"
@@ -304,13 +305,17 @@ const slug = route.params.slug as string
 const steps = ['隊伍資訊', '選手資料', '確認送出']
 const currentStep = ref(0)
 const submitting = ref(false)
-const submitError = ref('')
 
-// Required players: 1 CAPTAIN + 5 STARTER (fixed)
+const qrCodeSrc = computed(() => {
+  const base = (config.public.apiBase as string).replace(/\/api$/, '')
+  return `${base}/public/line-qrcode.png`
+})
+const submitError = ref('')
+// Required players: 1 CAPTAIN + 3 STARTER (fixed)
 function createRequiredPlayers(): RegisterPlayerInput[] {
   return [
     { name: '', phone: '', nationalId: '', role: 'CAPTAIN' },
-    ...Array.from({ length: 5 }, () => ({ name: '', phone: '', nationalId: '', role: 'STARTER' as const })),
+    ...Array.from({ length: 3 }, () => ({ name: '', phone: '', nationalId: '', role: 'STARTER' as const })),
   ]
 }
 
@@ -339,7 +344,7 @@ function removeSubstitute(index: number) {
 const errors = reactive<{ teamName?: string; players?: Record<number, string> }>({})
 
 function roleLabel(role: string) {
-  return { CAPTAIN: '隊長', STARTER: '先發', SUBSTITUTE: '替補' }[role] || role
+  return { CAPTAIN: '隊長', STARTER: '隊員', SUBSTITUTE: '候補隊員' }[role] || role
 }
 
 function roleColor(role: string) {
@@ -368,7 +373,7 @@ function validateStep1(): boolean {
   errors.players = {}
   let valid = true
   const phoneRegex = /^09\d{8}$/
-  const idRegex = /^[A-Z][1289]\d{8}$/
+  // 身分證只驗必填+長度10碼
 
   const all = allPlayers.value
 
@@ -377,23 +382,14 @@ function validateStep1(): boolean {
     const msgs: string[] = []
     if (!p.name.trim()) msgs.push('姓名不可為空')
     if (!phoneRegex.test(p.phone)) msgs.push('手機號碼格式錯誤（09開頭共10碼）')
-    if (!idRegex.test(p.nationalId.toUpperCase())) msgs.push('身分證格式錯誤')
+    if (!p.nationalId.trim()) msgs.push('身分證字號不可為空')
+    else if (p.nationalId.trim().length !== 10) msgs.push('身分證字號長度須為 10 碼')
     if (msgs.length) {
       errors.players![i] = msgs.join('、')
       valid = false
     }
   })
 
-  // Check duplicate national IDs
-  const ids = all.map(p => p.nationalId.toUpperCase()).filter(Boolean)
-  const seen = new Set<string>()
-  ids.forEach((id, i) => {
-    if (seen.has(id)) {
-      errors.players![i] = (errors.players![i] ? errors.players![i] + '、' : '') + '此身分證與隊內其他選手重複'
-      valid = false
-    }
-    seen.add(id)
-  })
 
   return valid
 }

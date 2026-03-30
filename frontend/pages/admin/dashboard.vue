@@ -95,6 +95,7 @@
                     <th class="text-left py-2 pr-4">角色</th>
                     <th class="text-left py-2 pr-4">姓名</th>
                     <th class="text-left py-2 pr-4">手機</th>
+                    <th class="text-left py-2 pr-4">身分證字號</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -104,6 +105,7 @@
                     </td>
                     <td class="py-2 pr-4 text-white">{{ p.name }}</td>
                     <td class="py-2 pr-4 text-gray-300">{{ p.phone }}</td>
+                    <td class="py-2 pr-4 text-gray-300">{{ p.nationalId || '-' }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -117,7 +119,7 @@
                 :disabled="reviewing === team.id"
                 @click="reviewTeam(team.id, 'SUCCESS')"
               >
-                通過審核
+                報名成功
               </button>
               <button
                 v-if="team.status !== 'FAILED'"
@@ -134,6 +136,7 @@
                 @click="reviewTeam(team.id, 'PENDING')"
               >
                 重設為審核中
+
               </button>
             </div>
           </div>
@@ -181,6 +184,7 @@
 
 <script setup lang="ts">
 import type { Tournament, AdminTeam, TeamStatus } from '~/types'
+const { decryptText } = useDecrypt()
 
 definePageMeta({ layout: 'admin' })
 
@@ -211,8 +215,8 @@ const rejectDialog = reactive({
 const filterOptions = [
   { label: '全部', value: 'ALL' as const },
   { label: '審核中', value: 'PENDING' as const },
-  { label: '已通過', value: 'SUCCESS' as const },
-  { label: '未通過', value: 'FAILED' as const },
+  { label: '報名成功', value: 'SUCCESS' as const },
+  { label: '報名失敗', value: 'FAILED' as const },
 ]
 
 function authHeaders() {
@@ -241,13 +245,25 @@ watch([selectedSlug, statusFilter], async () => {
   loadingTeams.value = true
   try {
     const query = statusFilter.value !== 'ALL' ? `?status=${statusFilter.value}` : ''
-    teams.value = await $fetch<AdminTeam[]>(
+    const raw = await $fetch<AdminTeam[]>(
       `/admin/tournaments/${selectedSlug.value}/teams${query}`,
       {
         baseURL: config.public.apiBase as string,
         headers: authHeaders(),
       },
     )
+    // Decrypt national IDs using transport key
+    const tk = sessionStorage.getItem('admin_tk')
+    if (tk) {
+      for (const team of raw) {
+        for (const p of team.players) {
+          if (p.nationalId) {
+            p.nationalId = await decryptText(p.nationalId, tk)
+          }
+        }
+      }
+    }
+    teams.value = raw
   } catch (err: any) {
     if (err?.status === 401) {
       adminToken.value = null

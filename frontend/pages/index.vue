@@ -36,9 +36,7 @@
           class="group block w-full sm:w-80 bg-surface-light border border-surface-border rounded-xl p-6 hover:border-primary/50 hover:bg-surface-lighter transition-all duration-200"
         >
           <div class="flex items-center justify-between mb-3">
-            <h3 class="text-lg font-bold text-white group-hover:text-primary transition-colors">
-              {{ t.name }}
-            </h3>
+            <h3 class="text-lg font-bold text-white group-hover:text-primary transition-colors whitespace-pre-line">{{ t.name }}</h3>
             <span
               v-if="t.isActive"
               class="px-2 py-0.5 rounded-full text-xs font-bold bg-primary/20 text-primary"

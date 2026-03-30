@@ -64,12 +64,16 @@ async function handleLogin() {
   errorMsg.value = ''
   loading.value = true
   try {
-    const res = await $fetch<{ accessToken: string }>('/admin/login', {
+    const res = await $fetch<{ accessToken: string; transportKey: string }>('/admin/login', {
       baseURL: config.public.apiBase as string,
       method: 'POST',
       body: { username: username.value, password: password.value },
     })
     adminToken.value = res.accessToken
+    // Store transport key in sessionStorage (not persisted across tabs/sessions)
+    if (res.transportKey) {
+      sessionStorage.setItem('admin_tk', res.transportKey)
+    }
     router.push('/admin/dashboard')
   } catch (err: any) {
     errorMsg.value = err?.data?.message || '登入失敗，請確認帳號密碼。'

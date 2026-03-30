@@ -13,15 +13,22 @@ export interface Tournament {
 
 export type TeamStatus = 'PENDING' | 'SUCCESS' | 'FAILED'
 
+export interface PublicTeamPlayer {
+  name: string
+  role: 'CAPTAIN' | 'STARTER' | 'SUBSTITUTE'
+}
+
 export interface PublicTeam {
   teamName: string
   status: TeamStatus
+  players: PublicTeamPlayer[]
 }
 
 export interface Player {
   id: string
   name: string
   phone: string
+  nationalId?: string
   role: 'CAPTAIN' | 'STARTER' | 'SUBSTITUTE'
   sortOrder: number
 }

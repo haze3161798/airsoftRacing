@@ -24,9 +24,9 @@ const badgeClass = computed(() => {
 
 const label = computed(() => {
   switch (props.status) {
-    case 'SUCCESS': return '審核通過'
+    case 'SUCCESS': return '報名成功'
     case 'PENDING': return '審核中'
-    case 'FAILED': return '審核失敗'
+    case 'FAILED': return '報名失敗'
     default: return props.status
   }
 })

@@ -9,7 +9,7 @@
 
         <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-6 text-sm text-gray-300">
-          <NuxtLink to="/tournament/season-1/register" class="nav-link hover:text-primary transition-colors">
+          <NuxtLink to="/tournament/season-1" class="nav-link hover:text-primary transition-colors">
             立即報名
           </NuxtLink>
           <NuxtLink to="/tournament/season-1/teams" class="nav-link hover:text-primary transition-colors">
@@ -57,7 +57,7 @@
         <div v-if="mobileMenuOpen" class="md:hidden bg-surface-light border-b border-surface-border">
           <nav class="px-4 py-4 space-y-3 text-sm">
             <NuxtLink
-              to="/tournament/season-1/register"
+              to="/tournament/season-1"
               class="block text-gray-300 hover:text-primary transition-colors py-2"
               @click="mobileMenuOpen = false"
             >

@@ -12,9 +12,7 @@
         <NuxtLink to="/" class="text-sm text-gray-400 hover:text-primary transition-colors mb-4 inline-block">
           &larr; 回到賽事列表
         </NuxtLink>
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-white mb-2">
-          {{ tournament.name }}
-        </h1>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white mb-2 whitespace-pre-line">{{ tournament.name }}</h1>
         <div class="flex flex-wrap items-center gap-3 text-sm text-gray-400">
           <span v-if="tournament.registrationStatus === 'OPEN'" class="px-2 py-0.5 rounded-full text-xs font-bold bg-accent-success/20 text-accent-success">
             報名開放中
@@ -73,14 +71,44 @@
       <!-- Payment Info -->
       <div class="bg-surface-light border border-surface-border rounded-xl p-6">
         <h2 class="text-lg font-bold text-white mb-4">繳費資訊</h2>
-        <div class="space-y-2 text-gray-300 text-sm">
-          <p>報名完成後，請依以下方式繳費：</p>
-          <div class="bg-surface rounded-lg p-4 mt-3 font-mono text-sm">
-            <p>匯款完成後，請截圖並私訊主辦單位確認。</p>
-            <p class="text-gray-500 mt-2">（詳細匯款帳號將由主辦方另行公告）</p>
+        <button
+          type="button"
+          class="bg-primary hover:bg-primary-600 text-white font-bold px-5 py-2.5 rounded-lg transition-colors"
+          @click="showPaymentDialog = true"
+        >
+          如果忘記繳費資訊請點此
+        </button>
+      </div>
+
+      <!-- Payment Dialog -->
+      <Teleport to="body">
+        <div v-if="showPaymentDialog" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div class="absolute inset-0 bg-black/70" @click="showPaymentDialog = false" />
+          <div class="relative bg-surface-light border border-surface-border rounded-xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <button
+              type="button"
+              class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+              @click="showPaymentDialog = false"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <h3 class="text-lg font-bold text-white mb-4">繳費資訊</h3>
+            <div class="space-y-3 text-sm text-gray-300">
+              <p>每隊報名費：<span class="text-white font-semibold">5,500 元</span></p>
+              <p>收款人：<span class="text-white font-semibold">吳文元</span></p>
+              <p>匯款資料：<span class="text-white font-semibold">（700）00410771562859</span></p>
+              <p class="text-accent-pending">付款後請向收款人進行資料核對，核對完成後就完美報名成功了！</p>
+              <p>收款人聯絡方式：<span class="text-white font-semibold">電話 0906808397</span>（可用電話加 Line）</p>
+              <p>隊長集合群組：<a href="https://line.me/ti/g/yL3sg8S8ky" target="_blank" rel="noopener" class="text-primary hover:text-primary-400 underline transition-colors">點此加入</a></p>
+            </div>
+            <div class="mt-4 flex justify-center">
+              <img :src="qrCodeSrc" alt="LINE QR Code" class="w-48 h-48 rounded-lg" />
+            </div>
           </div>
         </div>
-      </div>
+      </Teleport>
     </template>
   </div>
 </template>
@@ -94,6 +122,14 @@ const slug = route.params.slug as string
 
 const { data: tournament, pending, error } = await useFetch<Tournament & { registrationStatus: string }>(`/tournaments/${slug}`, {
   baseURL: config.public.apiBase as string,
+})
+
+const showPaymentDialog = ref(false)
+
+
+const qrCodeSrc = computed(() => {
+  const base = (config.public.apiBase as string).replace(/\/api$/, '')
+  return `${base}/public/line-qrcode.png`
 })
 
 const pdfFullUrl = computed(() => {

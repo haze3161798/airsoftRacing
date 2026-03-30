@@ -40,20 +40,42 @@
                 <th class="text-left px-6 py-3">#</th>
                 <th class="text-left px-6 py-3">隊伍名稱</th>
                 <th class="text-left px-6 py-3">狀態</th>
+                <th class="px-6 py-3 w-10"></th>
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="(team, i) in filteredTeams"
-                :key="team.teamName"
-                class="border-b border-surface-border/50 hover:bg-surface-lighter/50 transition-colors"
-              >
-                <td class="px-6 py-4 text-gray-500 text-sm">{{ i + 1 }}</td>
-                <td class="px-6 py-4 text-white font-medium">{{ team.teamName }}</td>
-                <td class="px-6 py-4">
-                  <StatusBadge :status="team.status" />
-                </td>
-              </tr>
+              <template v-for="(team, i) in filteredTeams" :key="team.teamName">
+                <tr
+                  class="border-b border-surface-border/50 hover:bg-surface-lighter/50 transition-colors cursor-pointer"
+                  @click="toggleExpand(team.teamName)"
+                >
+                  <td class="px-6 py-4 text-gray-500 text-sm">{{ i + 1 }}</td>
+                  <td class="px-6 py-4 text-white font-medium">{{ team.teamName }}</td>
+                  <td class="px-6 py-4">
+                    <StatusBadge :status="team.status" />
+                  </td>
+                  <td class="px-6 py-4 text-gray-400">
+                    <svg
+                      :class="['w-4 h-4 transition-transform', expandedTeam === team.teamName ? 'rotate-180' : '']"
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </td>
+                </tr>
+                <tr v-if="expandedTeam === team.teamName">
+                  <td colspan="4" class="px-6 pb-4 pt-0">
+                    <div class="bg-surface rounded-lg p-4">
+                      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 text-sm">
+                        <div v-for="player in team.players" :key="player.name" class="flex items-center gap-2">
+                          <span :class="roleColor(player.role)" class="text-xs font-bold shrink-0">{{ roleLabel(player.role) }}</span>
+                          <span class="text-white">{{ player.name }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </div>
@@ -88,8 +110,8 @@ const filters = computed(() => {
   return [
     { label: '全部', value: 'ALL' as const, count: all },
     { label: '審核中', value: 'PENDING' as const, count: pending },
-    { label: '已通過', value: 'SUCCESS' as const, count: success },
-    { label: '未通過', value: 'FAILED' as const, count: failed },
+    { label: '報名成功', value: 'SUCCESS' as const, count: success },
+    { label: '報名失敗', value: 'FAILED' as const, count: failed },
   ]
 })
 
@@ -97,6 +119,24 @@ const filteredTeams = computed(() => {
   if (activeFilter.value === 'ALL') return teams.value
   return teams.value.filter(t => t.status === activeFilter.value)
 })
+
+const expandedTeam = ref<string | null>(null)
+
+function toggleExpand(teamName: string) {
+  expandedTeam.value = expandedTeam.value === teamName ? null : teamName
+}
+
+function roleLabel(role: string) {
+  return { CAPTAIN: '隊長', STARTER: '隊員', SUBSTITUTE: '候補隊員' }[role] || role
+}
+
+function roleColor(role: string) {
+  return {
+    CAPTAIN: 'text-primary',
+    STARTER: 'text-accent-success',
+    SUBSTITUTE: 'text-accent-pending',
+  }[role] || 'text-gray-400'
+}
 
 useHead({ title: `報名隊伍 - Airsoft Racing` })
 </script>
