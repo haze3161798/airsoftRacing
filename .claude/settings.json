@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx nuxi@latest init frontend --force --packageManager npm)",
+      "Bash(npx nuxi@latest init frontend --template minimal --force --packageManager npm)",
+      "Bash(npx nest:*)",
+      "Bash(psql --version)",
+      "Bash(where pg_isready)",
+      "Bash(where postgres:*)",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/psql\" --version)",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/pg_isready\" -h localhost)",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/psql\" -h localhost -U postgres -c \"CREATE DATABASE airsoft_racing;\")",
+      "Bash(PGPASSWORD=0000 \"/c/Program Files/PostgreSQL/18/bin/psql\" -h localhost -U postgres -c \"CREATE DATABASE airsoft_racing;\")",
+      "Bash(npx ts-node:*)",
+      "Bash(curl -s http://localhost:3001/api/tournaments)",
+      "Bash(netstat -ano)",
+      "Bash(curl -s http://localhost:3002/api/tournaments/season-1)",
+      "Bash(curl -s -X POST http://localhost:3002/api/tournaments/season-1/register -H \"Content-Type: application/json\" -d '{:*)",
+      "Bash(node -e \":*)",
+      "Bash(curl -s http://localhost:3002/api/tournaments/season-1/teams)",
+      "Bash(node -e:*)",
+      "Bash(mv \"tournament-[slug]\" tmp-slug)",
+      "Bash(mv tmp-slug:*)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Jay\\Desktop\\AJ\\airsoftRacing"
+    ]
+  }
+}
