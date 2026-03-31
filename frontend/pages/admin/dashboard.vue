@@ -257,15 +257,20 @@ watch([selectedSlug, statusFilter], async () => {
     )
     // Decrypt phone + national IDs using transport key
     const tk = sessionStorage.getItem('admin_tk')
-    if (tk) {
-      for (const team of raw) {
-        for (const p of team.players) {
-          if (p.phone) {
-            p.phone = await decryptText(p.phone, tk)
-          }
-          if (p.nationalId) {
-            p.nationalId = await decryptText(p.nationalId, tk)
-          }
+    if (!tk) {
+      // Transport key lost (browser restarted), force re-login
+      adminToken.value = null
+      sessionStorage.removeItem('admin_tk')
+      router.replace('/admin')
+      return
+    }
+    for (const team of raw) {
+      for (const p of team.players) {
+        if (p.phone) {
+          p.phone = await decryptText(p.phone, tk)
+        }
+        if (p.nationalId) {
+          p.nationalId = await decryptText(p.nationalId, tk)
         }
       }
     }
@@ -341,6 +346,7 @@ async function confirmReject() {
 
 function handleLogout() {
   adminToken.value = null
+  sessionStorage.removeItem('admin_tk')
   router.push('/admin')
 }
 
