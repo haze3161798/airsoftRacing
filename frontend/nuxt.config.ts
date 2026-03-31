@@ -29,6 +29,10 @@ export default defineNuxtConfig({
     },
   },
 
+  nitro: {
+    serveStatic: true,
+  },
+
   // Browser compatibility: support last 2 years of mainstream browsers
   vite: {
     build: {
