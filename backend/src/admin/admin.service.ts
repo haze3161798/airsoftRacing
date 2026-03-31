@@ -5,6 +5,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { timingSafeEqual } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ReviewTeamDto } from './dto/review-team.dto';
 import { decrypt } from '../common/crypto.util';
@@ -35,7 +36,9 @@ export class AdminService {
     const adminUser = process.env.ADMIN_USERNAME || 'admin';
     const adminPass = process.env.ADMIN_PASSWORD || 'changeme';
 
-    if (username !== adminUser || password !== adminPass) {
+    const userMatch = this.safeEqual(username, adminUser);
+    const passMatch = this.safeEqual(password, adminPass);
+    if (!userMatch || !passMatch) {
       // Track failed attempts
       const current = loginAttempts.get(ip) || { count: 0, lockedUntil: 0 };
       current.count += 1;
@@ -90,17 +93,29 @@ export class AdminService {
     return teams.map((team) => ({
       ...team,
       players: team.players.map((p) => {
-        const plain = this.decryptNationalId(p.nationalIdHash);
+        const plainId = this.decryptField(p.nationalIdHash);
+        const plainPhone = this.decryptField(p.phone);
         return {
           ...p,
-          nationalId: transportKey ? transportEncrypt(plain, transportKey) : undefined,
+          phone: transportKey ? transportEncrypt(plainPhone, transportKey) : undefined,
+          nationalId: transportKey ? transportEncrypt(plainId, transportKey) : undefined,
           nationalIdHash: undefined,
         };
       }),
     }));
   }
 
-  private decryptNationalId(encrypted: string): string {
+  private safeEqual(a: string, b: string): boolean {
+    const bufA = Buffer.from(a);
+    const bufB = Buffer.from(b);
+    if (bufA.length !== bufB.length) {
+      timingSafeEqual(bufA, bufA); // constant-time even on length mismatch
+      return false;
+    }
+    return timingSafeEqual(bufA, bufB);
+  }
+
+  private decryptField(encrypted: string): string {
     try {
       return decrypt(encrypted);
     } catch {
@@ -124,10 +139,12 @@ export class AdminService {
     return {
       ...team,
       players: team.players.map((p) => {
-        const plain = this.decryptNationalId(p.nationalIdHash);
+        const plainId = this.decryptField(p.nationalIdHash);
+        const plainPhone = this.decryptField(p.phone);
         return {
           ...p,
-          nationalId: transportKey ? transportEncrypt(plain, transportKey) : undefined,
+          phone: transportKey ? transportEncrypt(plainPhone, transportKey) : undefined,
+          nationalId: transportKey ? transportEncrypt(plainId, transportKey) : undefined,
           nationalIdHash: undefined,
         };
       }),

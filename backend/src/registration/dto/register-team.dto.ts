@@ -8,7 +8,6 @@ import {
   MaxLength,
   IsOptional,
   IsEnum,
-  Matches,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -25,12 +24,11 @@ export class PlayerDto {
   name: string;
 
   @IsString()
-  @Matches(/^09\d{8}$/, { message: '請輸入有效的台灣手機號碼（09 開頭共 10 碼）' })
+  @IsNotEmpty({ message: '手機號碼不可為空' })
   phone: string;
 
   @IsString()
   @IsNotEmpty({ message: '身分證字號不可為空' })
-  @MaxLength(10, { message: '身分證字號長度須為 10 碼' })
   nationalId: string;
 
   @IsEnum(PlayerRole, { message: '角色必須為 CAPTAIN、STARTER 或 SUBSTITUTE' })

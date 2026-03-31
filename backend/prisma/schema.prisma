@@ -51,7 +51,7 @@ model Player {
   teamId         String   @map("team_id")
   tournamentId   String   @map("tournament_id")
   name           String   @db.VarChar(100)
-  phone          String   @db.VarChar(20)
+  phone          String   @db.VarChar(128)
   nationalIdHash String   @db.VarChar(128) @map("national_id_hash")
   role           String   @db.VarChar(20)
   sortOrder      Int      @default(0) @map("sort_order")

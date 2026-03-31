@@ -21,9 +21,13 @@ export class AdminGuard implements CanActivate {
 
     try {
       const payload = await this.jwtService.verifyAsync(token);
+      if (payload.sub !== 'admin') {
+        throw new UnauthorizedException('權限不足');
+      }
       (request as any).adminPayload = payload;
       return true;
-    } catch {
+    } catch (err) {
+      if (err instanceof UnauthorizedException) throw err;
       throw new UnauthorizedException('登入已過期，請重新登入');
     }
   }

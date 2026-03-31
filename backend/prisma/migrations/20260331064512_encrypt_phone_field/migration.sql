@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "player" ALTER COLUMN "phone" SET DATA TYPE VARCHAR(128);

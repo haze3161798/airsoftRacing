@@ -5,6 +5,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Trust proxy (Zeabur / reverse proxy)
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.set('trust proxy', 'loopback');
+
   // Global prefix
   app.setGlobalPrefix('api');
 

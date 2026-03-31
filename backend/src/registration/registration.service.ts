@@ -6,16 +6,44 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterTeamDto, PlayerRole } from './dto/register-team.dto';
 import { encrypt } from '../common/crypto.util';
+import { generateTransportKey, transportDecrypt } from '../common/transport-crypto';
+
+// Transport keys for registration (5 min TTL)
+const transportKeys = new Map<string, { key: string; expiresAt: number }>();
+const TRANSPORT_KEY_TTL = 5 * 60 * 1000;
 
 @Injectable()
 export class RegistrationService {
   constructor(private prisma: PrismaService) {}
 
-  private encryptNationalId(nationalId: string): string {
-    return encrypt(nationalId);
+  generateRegistrationKey(): { keyId: string; transportKey: string } {
+    // Clean expired keys
+    const now = Date.now();
+    for (const [id, entry] of transportKeys) {
+      if (entry.expiresAt < now) transportKeys.delete(id);
+    }
+
+    const transportKey = generateTransportKey();
+    const keyId = crypto.randomUUID();
+    transportKeys.set(keyId, { key: transportKey, expiresAt: now + TRANSPORT_KEY_TTL });
+    return { keyId, transportKey };
   }
 
-  async register(slug: string, dto: RegisterTeamDto) {
+  private getTransportKey(keyId: string): string | null {
+    const entry = transportKeys.get(keyId);
+    if (!entry || entry.expiresAt < Date.now()) {
+      transportKeys.delete(keyId);
+      return null;
+    }
+    transportKeys.delete(keyId); // One-time use
+    return entry.key;
+  }
+
+  private encryptField(value: string): string {
+    return encrypt(value);
+  }
+
+  async register(slug: string, dto: RegisterTeamDto, keyId?: string) {
     // 1. Find tournament
     const tournament = await this.prisma.tournament.findUnique({
       where: { slug },
@@ -53,8 +81,27 @@ export class RegistrationService {
       throw new BadRequestException('候補隊員最多 2 名 (SUBSTITUTE)');
     }
 
-    // 4. Validate national IDs (length only)
-    for (const player of dto.players) {
+    // 4. Decrypt transport-encrypted fields if keyId provided
+    const tk = keyId ? this.getTransportKey(keyId) : null;
+    if (keyId && !tk) {
+      throw new BadRequestException('加密金鑰已過期，請重新整理頁面');
+    }
+
+    // Decrypt phone + nationalId if transport-encrypted
+    const decryptedPlayers = dto.players.map((p) => ({
+      ...p,
+      phone: tk ? transportDecrypt(p.phone, tk) : p.phone,
+      nationalId: tk ? transportDecrypt(p.nationalId, tk) : p.nationalId,
+    }));
+
+    // 5. Validate decrypted fields
+    const phoneRegex = /^09\d{8}$/;
+    for (const player of decryptedPlayers) {
+      if (!phoneRegex.test(player.phone)) {
+        throw new BadRequestException(
+          `選手「${player.name}」的手機號碼格式錯誤（09 開頭共 10 碼）`,
+        );
+      }
       if (!player.nationalId || player.nationalId.length !== 10) {
         throw new BadRequestException(
           `選手「${player.name}」的身分證字號長度須為 10 碼`,
@@ -75,12 +122,12 @@ export class RegistrationService {
       });
 
       await tx.player.createMany({
-        data: dto.players.map((p, index) => ({
+        data: decryptedPlayers.map((p, index) => ({
           teamId: newTeam.id,
           tournamentId: tournament.id,
           name: p.name,
-          phone: p.phone,
-          nationalIdHash: this.encryptNationalId(p.nationalId),
+          phone: this.encryptField(p.phone),
+          nationalIdHash: this.encryptField(p.nationalId),
           role: p.role,
           sortOrder: index,
         })),

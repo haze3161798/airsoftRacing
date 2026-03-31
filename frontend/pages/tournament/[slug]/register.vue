@@ -297,6 +297,7 @@
 
 <script setup lang="ts">
 import type { RegisterPlayerInput } from '~/types'
+const { encryptText } = useDecrypt()
 
 const route = useRoute()
 const config = useRuntimeConfig()
@@ -404,21 +405,34 @@ async function submitForm() {
   submitError.value = ''
   submitting.value = true
   try {
-    // Uppercase national IDs before sending
+    // 1. Get one-time transport key from server
+    const { keyId, transportKey } = await $fetch<{ keyId: string; transportKey: string }>(
+      `/tournaments/${slug}/register-key`,
+      { baseURL: config.public.apiBase as string },
+    )
+
+    // 2. Encrypt phone + nationalId with transport key
+    const encryptedPlayers = await Promise.all(
+      allPlayers.value.map(async (p) => ({
+        ...p,
+        name: p.name.trim(),
+        phone: await encryptText(p.phone, transportKey),
+        nationalId: await encryptText(p.nationalId.toUpperCase(), transportKey),
+      })),
+    )
+
+    // 3. Send encrypted data with keyId in header
     const payload = {
       teamName: form.teamName.trim(),
       paymentNote: form.paymentNote.trim() || undefined,
-      players: allPlayers.value.map(p => ({
-        ...p,
-        name: p.name.trim(),
-        nationalId: p.nationalId.toUpperCase(),
-      })),
+      players: encryptedPlayers,
     }
 
     await $fetch(`/tournaments/${slug}/register`, {
       baseURL: config.public.apiBase as string,
       method: 'POST',
       body: payload,
+      headers: { 'x-transport-key-id': keyId },
     })
 
     currentStep.value = 3

@@ -190,7 +190,10 @@ definePageMeta({ layout: 'admin' })
 
 const config = useRuntimeConfig()
 const router = useRouter()
-const adminToken = useCookie('admin_token')
+const adminToken = useCookie('admin_token', {
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
+})
 
 // Auth check
 if (!adminToken.value) {
@@ -252,11 +255,14 @@ watch([selectedSlug, statusFilter], async () => {
         headers: authHeaders(),
       },
     )
-    // Decrypt national IDs using transport key
+    // Decrypt phone + national IDs using transport key
     const tk = sessionStorage.getItem('admin_tk')
     if (tk) {
       for (const team of raw) {
         for (const p of team.players) {
+          if (p.phone) {
+            p.phone = await decryptText(p.phone, tk)
+          }
           if (p.nationalId) {
             p.nationalId = await decryptText(p.nationalId, tk)
           }

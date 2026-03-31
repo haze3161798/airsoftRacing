@@ -48,7 +48,11 @@
 <script setup lang="ts">
 const config = useRuntimeConfig()
 const router = useRouter()
-const adminToken = useCookie('admin_token', { maxAge: 60 * 60 * 8 })
+const adminToken = useCookie('admin_token', {
+  maxAge: 60 * 60 * 24,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
+})
 
 // If already logged in, redirect
 if (adminToken.value) {

@@ -8,7 +8,7 @@ import { AdminGuard } from './admin.guard';
   imports: [
     JwtModule.register({
       secret: process.env.JWT_SECRET || (() => { throw new Error('JWT_SECRET must be set') })(),
-      signOptions: { expiresIn: '8h' },
+      signOptions: { expiresIn: '24h' },
     }),
   ],
   controllers: [AdminController],
