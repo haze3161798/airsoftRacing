@@ -14,5 +14,11 @@
 
 <script setup lang="ts">
 const config = useRuntimeConfig()
-const logoSrc = `${(config.public.apiBase as string).replace(/\/api$/, '')}/public/logo.svg`
+const backendBase = (config.public.apiBase as string).replace(/\/api$/, '')
+const logoSrc = `${backendBase}/public/logo.svg`
+const faviconSrc = `${backendBase}/public/favicon.svg`
+
+useHead({
+  link: [{ rel: 'icon', type: 'image/svg+xml', href: faviconSrc }],
+})
 </script>

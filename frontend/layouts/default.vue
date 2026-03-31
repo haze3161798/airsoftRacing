@@ -109,6 +109,11 @@ const config = useRuntimeConfig()
 const mobileMenuOpen = ref(false)
 const backendBase = (config.public.apiBase as string).replace(/\/api$/, '')
 const logoSrc = `${backendBase}/public/logo.svg`
+const faviconSrc = `${backendBase}/public/favicon.svg`
+
+useHead({
+  link: [{ rel: 'icon', type: 'image/svg+xml', href: faviconSrc }],
+})
 
 // Fetch active tournament to get PDF URL
 const { data: tournaments } = await useFetch<Tournament[]>('/tournaments', {

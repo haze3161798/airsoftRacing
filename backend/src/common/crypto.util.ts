@@ -1,11 +1,20 @@
-import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
+import { createCipheriv, createDecipheriv, randomBytes, pbkdf2Sync } from 'crypto';
 
 const ALGORITHM = 'aes-256-cbc';
+const PBKDF2_ITERATIONS = 100_000;
+const KEY_LENGTH = 32;
+const SALT = 'airsoft-racing-storage-salt'; // Fixed salt — key changes when secret changes
+
+let _cachedKey: Buffer | null = null;
 
 function getKey(): Buffer {
-  const secret = process.env.JWT_SECRET || 'dev-local-secret-key-2026';
-  // Derive a 32-byte key from the secret
-  return Buffer.from(secret.padEnd(32, '0').slice(0, 32), 'utf-8');
+  if (_cachedKey) return _cachedKey;
+  const secret = process.env.ENCRYPTION_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error('ENCRYPTION_SECRET must be set and at least 32 characters');
+  }
+  _cachedKey = pbkdf2Sync(secret, SALT, PBKDF2_ITERATIONS, KEY_LENGTH, 'sha256');
+  return _cachedKey;
 }
 
 /**

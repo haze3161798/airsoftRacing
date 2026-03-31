@@ -1,17 +1,19 @@
 # 資安檢測報告 — Airsoft Racing 報名平台
 
 **檢測日期**：2026-03-30
+**最後更新**：2026-03-31
 **檢測範圍**：Frontend (Nuxt 3)、Backend (Nest.js)、Database (Prisma/PostgreSQL)、Deployment (Docker/Zeabur)
 
 ---
 
 ## 🔴 CRITICAL（立即修復）
 
-### 1. `.env` 機密檔案疑似進入版控
+### 1. `.env` 機密檔案疑似進入版控 ✅ 已確認安全
 - **位置**：`backend/.env`
 - **問題**：含資料庫密碼 `0000`、管理員密碼 `changeme`、JWT Secret
 - **影響**：任何取得 repo 存取權的人可直接拿到所有憑證
 - **修復**：用 `git filter-repo` 從歷史中移除，立即輪換所有密碼
+- **✅ 狀態**：`.gitignore` 已包含 `.env`，不會進入版控。加密金鑰已從 `JWT_SECRET` 分離為獨立的 `ENCRYPTION_SECRET` 環境變數（2026-03-31）
 
 ### 2. 寫死的預設管理員密碼
 - **位置**：`backend/src/admin/admin.service.ts:33-34`
@@ -19,11 +21,11 @@
 - **影響**：攻擊者可直接以預設帳密登入後台
 - **修復**：啟動時偵測未設定 env var 則拒絕啟動（fail-fast）
 
-### 3. 寫死的 JWT Secret fallback
+### 3. 寫死的 JWT Secret fallback ✅ 已修復
 - **位置**：`backend/src/admin/admin.module.ts:10`
 - **問題**：`process.env.JWT_SECRET || 'dev-secret-change-in-production'`
 - **影響**：攻擊者可用已知 secret 自行簽發合法 JWT
-- **修復**：與上同，未設定時拒絕啟動
+- **✅ 修復內容**（2026-03-31）：移除 hardcoded fallback，`JWT_SECRET` 未設定時拒絕啟動（fail-fast）
 
 ### 4. 缺少 HTTP 安全標頭（Helmet.js）
 - **位置**：`backend/src/main.ts`
@@ -86,10 +88,14 @@
 
 ## 🟡 MEDIUM（近期修復）
 
-### 13. SHA-256 雜湊身分證使用可預測 salt
-- **位置**：`backend/src/registration/registration.service.ts:14-17`
-- **問題**：`tournament.id` 作為 salt，可預測且 SHA-256 速度太快
-- **修復**：改用 bcrypt 或加入隨機 salt
+### 13. 加密金鑰衍生方式不安全 ✅ 已修復
+- **位置**：`backend/src/common/crypto.util.ts`
+- **原問題**：使用 `padEnd('0').slice(0,32)` 產生 AES 金鑰，密碼學上極不安全；且與 JWT 共用同一個 `JWT_SECRET`
+- **✅ 修復內容**（2026-03-31）：
+  - 金鑰衍生改用 **PBKDF2**（100,000 iterations, SHA-256）
+  - 新增獨立環境變數 `ENCRYPTION_SECRET`，與 `JWT_SECRET` 完全分離
+  - 啟動時驗證 `ENCRYPTION_SECRET` 必須存在且 ≥ 32 字元（fail-fast）
+  - 金鑰結果快取，避免重複運算
 
 ### 14. 錯誤訊息洩漏隊伍資訊
 - **位置**：`backend/src/registration/registration.service.ts:78-80`
@@ -129,7 +135,7 @@
 | 21 | 無 CSP (Content Security Policy) | `frontend/nuxt.config.ts` |
 | 22 | 無 Subresource Integrity (SRI) | 前端外部資源 |
 | 23 | JWT 未明確指定 algorithm | `backend/src/admin/admin.module.ts` |
-| 24 | 無密碼強度要求 | 單帳號系統 |
+| 24 | ~~無密碼強度要求~~ — 不需修復（單帳號系統，密碼由 env var 控管） | 單帳號系統 |
 
 ---
 
@@ -137,8 +143,8 @@
 
 | 優先級 | 行動項目 | 預估工作量 |
 |--------|---------|-----------|
-| **P0 立即** | 從 git 歷史移除 `.env`，輪換所有密碼/secret | 小 |
-| **P0 立即** | env var 未設定時 fail-fast 拒絕啟動 | 小 |
+| ✅ **P0** | `.env` 已在 `.gitignore`；加密金鑰分離為 `ENCRYPTION_SECRET` | ✅ 完成 |
+| ✅ **P0** | `ENCRYPTION_SECRET` 未設定時 fail-fast 拒絕啟動 + PBKDF2 金鑰衍生 | ✅ 完成 |
 | **P1 部署前** | 安裝 Helmet.js + 安全標頭 | 小 |
 | **P1 部署前** | `crypto.timingSafeEqual` 密碼比對 | 小 |
 | **P1 部署前** | Cookie 加上 httpOnly / secure / sameSite | 小 |
