@@ -6,6 +6,22 @@
           <img :src="logoSrc" alt="Airsoft Racing" class="h-7 w-auto" />
         </NuxtLink>
         <span class="text-gray-400 font-normal text-sm">Admin</span>
+        <nav class="ml-4 flex gap-3">
+          <NuxtLink
+            to="/admin/dashboard"
+            class="text-sm text-gray-400 hover:text-white transition-colors"
+            active-class="!text-primary font-semibold"
+          >
+            報名審核
+          </NuxtLink>
+          <NuxtLink
+            to="/admin/sponsors"
+            class="text-sm text-gray-400 hover:text-white transition-colors"
+            active-class="!text-primary font-semibold"
+          >
+            贊助商管理
+          </NuxtLink>
+        </nav>
       </div>
     </header>
     <slot />

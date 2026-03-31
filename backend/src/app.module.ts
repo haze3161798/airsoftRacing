@@ -7,6 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { TournamentModule } from './tournament/tournament.module';
 import { RegistrationModule } from './registration/registration.module';
 import { AdminModule } from './admin/admin.module';
+import { SponsorModule } from './sponsor/sponsor.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AdminModule } from './admin/admin.module';
     TournamentModule,
     RegistrationModule,
     AdminModule,
+    SponsorModule,
   ],
   providers: [
     {

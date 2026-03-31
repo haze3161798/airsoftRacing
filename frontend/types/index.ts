@@ -57,3 +57,13 @@ export interface RegisterTeamInput {
   paymentNote?: string
   players: RegisterPlayerInput[]
 }
+
+export interface Sponsor {
+  id: string
+  name: string
+  linkUrl: string | null
+  isActive: boolean
+  sortOrder: number
+  createdAt?: string
+  updatedAt?: string
+}

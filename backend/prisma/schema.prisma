@@ -64,3 +64,17 @@ model Player {
   @@index([teamId])
   @@map("player")
 }
+
+model Sponsor {
+  id            String   @id @default(uuid())
+  name          String   @db.VarChar(100)
+  imageData     Bytes    @map("image_data")
+  imageMimeType String   @db.VarChar(50) @map("image_mime_type")
+  linkUrl       String?  @db.VarChar(500) @map("link_url")
+  isActive      Boolean  @default(true) @map("is_active")
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("sponsor")
+}
