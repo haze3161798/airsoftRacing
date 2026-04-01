@@ -350,5 +350,8 @@ function handleLogout() {
   router.push('/admin')
 }
 
-useHead({ title: '管理後台 - Airsoft Racing' })
+useHead({
+  title: '管理後台 - Airsoft Racing',
+  meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+})
 </script>

@@ -4,7 +4,7 @@
       &larr; 返回賽事頁面
     </NuxtLink>
 
-    <h1 class="text-2xl sm:text-3xl font-extrabold text-white mb-8">隊伍報名</h1>
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-8">隊伍報名</h2>
 
     <!-- Step Indicator -->
     <div class="flex items-center mb-10">
@@ -444,5 +444,16 @@ async function submitForm() {
   }
 }
 
-useHead({ title: `報名 - Airsoft Racing` })
+const backendBase = (config.public.apiBase as string).replace(/\/api$/, '')
+
+useHead({ title: '隊伍報名 - Airsoft Racing' })
+useSeoMeta({
+  description: '極限速度杯 Airsoft Contest 線上報名 — 填寫隊伍資訊與選手資料，立即完成報名。',
+  ogTitle: '隊伍報名 - Airsoft Racing',
+  ogDescription: '極限速度杯 Airsoft Contest 線上報名 — 填寫隊伍資訊與選手資料，立即完成報名。',
+  ogImage: `${backendBase}/public/banner.png`,
+  twitterTitle: '隊伍報名 - Airsoft Racing',
+  twitterDescription: '極限速度杯 Airsoft Contest 線上報名 — 填寫隊伍資訊與選手資料，立即完成報名。',
+  twitterImage: `${backendBase}/public/banner.png`,
+})
 </script>

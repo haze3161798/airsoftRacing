@@ -486,5 +486,8 @@ function handleLogout() {
   router.push('/admin')
 }
 
-useHead({ title: '贊助商管理 - Airsoft Racing' })
+useHead({
+  title: '贊助商管理 - Airsoft Racing',
+  meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+})
 </script>

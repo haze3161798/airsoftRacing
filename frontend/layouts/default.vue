@@ -3,12 +3,14 @@
     <!-- Header -->
     <header class="bg-surface-light border-b border-surface-border sticky top-0 z-40">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <NuxtLink to="/" class="shrink-0">
-          <img :src="logoSrc" alt="Airsoft Racing" class="h-8 sm:h-9 w-auto" />
-        </NuxtLink>
+        <h1 class="shrink-0 m-0 p-0 leading-none">
+          <NuxtLink to="/">
+            <img :src="logoSrc" alt="Airsoft Racing - 極限速度杯氣槍競速賽" class="h-8 sm:h-9 w-auto" />
+          </NuxtLink>
+        </h1>
 
         <!-- Desktop nav -->
-        <nav class="hidden md:flex items-center gap-6 text-sm text-gray-300">
+        <nav aria-label="主選單" class="hidden md:flex items-center gap-6 text-sm text-gray-300">
           <NuxtLink to="/tournament/season-1" class="nav-link hover:text-primary transition-colors">
             立即報名
           </NuxtLink>
@@ -55,7 +57,7 @@
         leave-to-class="opacity-0 -translate-y-2"
       >
         <div v-if="mobileMenuOpen" class="md:hidden bg-surface-light border-b border-surface-border">
-          <nav class="px-4 py-4 space-y-3 text-sm">
+          <nav aria-label="行動版選單" class="px-4 py-4 space-y-3 text-sm">
             <NuxtLink
               to="/tournament/season-1"
               class="block text-gray-300 hover:text-primary transition-colors py-2"

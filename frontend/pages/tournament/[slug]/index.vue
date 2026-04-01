@@ -12,7 +12,7 @@
         <NuxtLink to="/" class="text-sm text-gray-400 hover:text-primary transition-colors mb-4 inline-block">
           &larr; 回到賽事列表
         </NuxtLink>
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-white mb-2 whitespace-pre-line">{{ tournament.name }}</h1>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-2 whitespace-pre-line">{{ tournament.name }}</h2>
         <div class="flex flex-wrap items-center gap-3 text-sm text-gray-400">
           <span v-if="tournament.registrationStatus === 'OPEN'" class="px-2 py-0.5 rounded-full text-xs font-bold bg-accent-success/20 text-accent-success">
             報名開放中
@@ -150,7 +150,51 @@ function formatDate(dateStr: string) {
   })
 }
 
+const backendBase = (config.public.apiBase as string).replace(/\/api$/, '')
+
+const seoTitle = computed(() =>
+  tournament.value?.name ? `${tournament.value.name} - Airsoft Racing` : 'Airsoft Racing',
+)
+const seoDesc = computed(() =>
+  tournament.value?.description
+    ? `${tournament.value.name} — ${tournament.value.description.slice(0, 120)}`
+    : `${tournament.value?.name || 'Airsoft Racing'} — 氣槍競速電競賽事詳情與線上報名`,
+)
+const ogImage = computed(() => {
+  const path = tournament.value?.bannerUrl
+  return path ? (path.startsWith('/') ? `${backendBase}${path}` : path) : `${backendBase}/public/banner.png`
+})
+
 useHead({
-  title: tournament.value?.name ? `${tournament.value.name} - Airsoft Racing` : 'Airsoft Racing',
+  title: seoTitle,
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: computed(() => JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'SportsEvent',
+        name: tournament.value?.name || '',
+        description: tournament.value?.description || '',
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        organizer: {
+          '@type': 'Organization',
+          name: 'Airsoft Racing',
+        },
+        ...(tournament.value?.registrationCloseAt && {
+          startDate: tournament.value.registrationCloseAt,
+        }),
+      })),
+    },
+  ],
+})
+useSeoMeta({
+  ogTitle: seoTitle,
+  description: seoDesc,
+  ogDescription: seoDesc,
+  ogImage,
+  twitterTitle: seoTitle,
+  twitterDescription: seoDesc,
+  twitterImage: ogImage,
 })
 </script>

@@ -4,7 +4,7 @@
       &larr; 返回賽事頁面
     </NuxtLink>
 
-    <h1 class="text-2xl sm:text-3xl font-extrabold text-white mb-8">報名隊伍一覽</h1>
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-8">報名隊伍一覽</h2>
 
     <div v-if="pending" class="text-center py-12 text-gray-400">載入中...</div>
 
@@ -138,5 +138,16 @@ function roleColor(role: string) {
   }[role] || 'text-gray-400'
 }
 
-useHead({ title: `報名隊伍 - Airsoft Racing` })
+const backendBase = (config.public.apiBase as string).replace(/\/api$/, '')
+
+useHead({ title: '報名隊伍一覽 - Airsoft Racing' })
+useSeoMeta({
+  description: '查看各隊伍報名狀態與成員名單 — Airsoft Racing 氣槍競速賽。',
+  ogTitle: '報名隊伍一覽 - Airsoft Racing',
+  ogDescription: '查看各隊伍報名狀態與成員名單 — Airsoft Racing 氣槍競速賽。',
+  ogImage: `${backendBase}/public/banner.png`,
+  twitterTitle: '報名隊伍一覽 - Airsoft Racing',
+  twitterDescription: '查看各隊伍報名狀態與成員名單 — Airsoft Racing 氣槍競速賽。',
+  twitterImage: `${backendBase}/public/banner.png`,
+})
 </script>

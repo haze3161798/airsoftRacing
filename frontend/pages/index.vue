@@ -4,7 +4,7 @@
     <section v-if="bannerSrc" class="relative w-full overflow-hidden bg-surface-light" style="aspect-ratio: 3 / 1;">
       <img
         :src="bannerSrc"
-        alt="Airsoft Racing 宣傳圖"
+        alt="極限速度杯 Airsoft Contest — 氣槍競速電競賽事宣傳圖"
         class="absolute inset-0 w-full h-full object-cover"
       />
      
@@ -69,6 +69,31 @@ import type { Tournament, Sponsor } from '~/types'
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase as string
 const backendBase = apiBase.replace(/\/api$/, '')
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Airsoft Racing',
+        url: 'https://limitspeed.zeabur.app',
+        description: '極限速度杯 Airsoft Contest — 氣槍競速電競賽事報名平台',
+      }),
+    },
+  ],
+})
+useSeoMeta({
+  title: 'Airsoft Racing - 極限速度杯氣槍競速賽',
+  ogTitle: 'Airsoft Racing - 極限速度杯氣槍競速賽',
+  description: '極限速度杯 Airsoft Contest — 氣槍競速電競賽事報名平台。4v4 搶旗模式 Speedsoft，線上報名、查看賽事與報名隊伍。',
+  ogDescription: '極限速度杯 Airsoft Contest — 氣槍競速電競賽事報名平台。4v4 搶旗模式 Speedsoft，線上報名、查看賽事與報名隊伍。',
+  ogImage: `${backendBase}/public/banner.png`,
+  twitterTitle: 'Airsoft Racing - 極限速度杯氣槍競速賽',
+  twitterDescription: '極限速度杯 Airsoft Contest — 4v4 搶旗模式 Speedsoft 氣槍競速電競賽事，立即線上報名！',
+  twitterImage: `${backendBase}/public/banner.png`,
+})
 
 const { data: tournaments, pending, error } = await useFetch<Tournament[]>('/tournaments', {
   baseURL: apiBase,

@@ -86,5 +86,8 @@ async function handleLogin() {
   }
 }
 
-useHead({ title: '管理員登入 - Airsoft Racing' })
+useHead({
+  title: '管理員登入 - Airsoft Racing',
+  meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+})
 </script>
