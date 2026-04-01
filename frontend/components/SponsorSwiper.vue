@@ -10,14 +10,14 @@
           <component
             :is="s.linkUrl ? 'a' : 'div'"
             v-bind="s.linkUrl ? { href: s.linkUrl, target: '_blank', rel: 'noopener noreferrer' } : {}"
-            class="block rounded-xl overflow-hidden bg-white/5 border border-surface-border hover:border-primary/40 transition-all duration-200 p-4 flex items-center justify-center"
+            class="block rounded-xl overflow-hidden bg-white/5 border border-surface-border hover:border-primary/40 transition-all duration-200"
             :class="s.linkUrl ? 'cursor-pointer' : 'cursor-default'"
             style="aspect-ratio: 4 / 3;"
           >
             <img
               :src="`${apiBase}/sponsors/${s.id}/image`"
               :alt="s.name"
-              class="max-w-full max-h-full object-contain"
+              class="w-full h-full object-cover"
               loading="lazy"
             />
           </component>

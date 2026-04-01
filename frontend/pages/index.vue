@@ -7,12 +7,7 @@
         alt="Airsoft Racing 宣傳圖"
         class="absolute inset-0 w-full h-full object-cover"
       />
-      <div class="absolute inset-0 flex flex-col items-center justify-center bg-black/30">
-        <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-wider">
-          AIRSOFT <span class="text-primary">RACING</span>
-        </h1>
-        <p class="text-sm sm:text-lg text-gray-300 mt-2 tracking-widest">氣槍競速電競賽事</p>
-      </div>
+     
     </section>
 
     <!-- Tournament List -->
