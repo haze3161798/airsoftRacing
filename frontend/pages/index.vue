@@ -10,6 +10,37 @@
      
     </section>
 
+    <!-- Announcement Banner -->
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-2">
+      <div class="relative border-2 border-orange-500 rounded-xl p-6 bg-orange-500/10 backdrop-blur">
+        <h3 class="text-center text-xl font-bold text-orange-400 mb-4">
+          ⚠️ 賽事日期異動與早鳥優惠公告 ⚠️
+        </h3>
+        <p class="text-gray-200 leading-relaxed mb-3">
+          非常抱歉地通知大家，因場地協調因素，我們的比賽將延後至
+          <strong class="text-red-400">6 月 7 日（日）</strong>
+          舉辦。造成大家的困擾，主辦單位真的非常抱歉！🙇‍♂️
+        </p>
+        <p class="text-gray-200 leading-relaxed mb-2">
+          雖然比賽延期，但好康福利沒有少！<br />
+          📌 <strong class="text-white">最新時程與優惠：</strong>
+        </p>
+        <ul class="text-gray-200 leading-loose mb-4 pl-5 list-disc">
+          <li>
+            <strong class="text-white">報名最後衝刺：</strong> 5 月 22 日截止
+          </li>
+          <li>
+            🎁 <strong class="text-white">早鳥專屬好禮：</strong> 只要在
+            <strong class="text-red-400">5 月 1 日前</strong>
+            提前完成繳費的隊伍，就能加碼享有「店家優惠券」等多項驚喜獎勵喔！
+          </li>
+        </ul>
+        <p class="text-center font-bold text-orange-400 text-lg">
+          快把握時間完成報名與繳費，我們 6/7 賽場見！
+        </p>
+      </div>
+    </div>
+
     <!-- Tournament List -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <section>
@@ -42,6 +73,10 @@
           <p v-if="t.description" class="text-sm text-gray-400 line-clamp-2">
             {{ t.description }}
           </p>
+          <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
+            <span>🏁 比賽日期：<strong class="text-white">2025/06/07（六）</strong></span>
+            <span>📋 報名截止：<strong class="text-white">2025/05/22</strong></span>
+          </div>
         </NuxtLink>
       </div>
 

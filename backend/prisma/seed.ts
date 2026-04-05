@@ -16,11 +16,11 @@ async function main() {
       slug: 'season-1',
       name: '第一屆 極限速度杯\nAirsoft Contest',
       description:
-        '【第一屆類 Speedsoft 賽事報名資訊】\n\n歡迎報名第一屆類 Speedsoft 賽事。本賽事採用 4v4 搶旗模式，並依據賽事積分進行排名。\n\n報名編制：每支隊伍須由 1 名隊長及 3 名正式隊員組成，並可視需求增報最多 2 名替補人員。\n早鳥獎勵：凡於 5 月 4 日（含）前完成報名手續並成功繳費之隊伍，將額外獲贈店家折扣禮券。',
+        '【第一屆類 Speedsoft 賽事報名資訊】\n\n歡迎報名第一屆類 Speedsoft 賽事。本賽事採用 4v4 搶旗模式，並依據賽事積分進行排名。\n\n比賽日期：6 月 7 日（六）\n報名截止：5 月 22 日\n\n報名編制：每支隊伍須由 1 名隊長及 3 名正式隊員組成，並可視需求增報最多 2 名替補人員。\n早鳥獎勵：凡於 5 月 1 日（含）前完成報名手續並成功繳費之隊伍，將額外獲贈店家折扣禮券等多項驚喜獎勵。',
       rulesPdfUrl: '/public/rules-season-1.pdf',
       bannerUrl: '/public/hero-banner.svg',
       registrationOpenAt: new Date('2026-03-01T00:00:00+08:00'),
-      registrationCloseAt: new Date('2026-05-12T23:59:59+08:00'),
+      registrationCloseAt: new Date('2026-05-22T23:59:59+08:00'),
       isActive: true,
     },
   });
