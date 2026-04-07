@@ -50,13 +50,17 @@ function initSwiper() {
 
   nextTick(() => {
     if (swiperContainer.value) {
+      const count = props.sponsors.length
+      const initialIndex = count <= 1 ? 0 : Math.floor((count - 1) / 2)
+
       swiperInstance = new Swiper(swiperContainer.value, {
         modules: [EffectCoverflow, Pagination, Autoplay],
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,
         slidesPerView: 'auto',
-        loop: props.sponsors.length >= 5,
+        initialSlide: initialIndex,
+        loop: count >= 5,
         coverflowEffect: {
           rotate: 20,
           stretch: 0,

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Hero Banner -->
-    <section v-if="bannerSrc" class="relative w-full overflow-hidden bg-surface-light" style="aspect-ratio: 3 / 1;">
+    <section v-if="bannerSrc" class="relative w-full overflow-hidden bg-surface-light" style="aspect-ratio: 2.45 / 1;">
       <img
         :src="bannerSrc"
         alt="極限速度杯 Airsoft Contest — 氣槍競速電競賽事宣傳圖"
@@ -77,6 +77,7 @@
             <span>🏁 比賽日期：<strong class="text-white">2026/06/07（六）</strong></span>
             <span>📋 報名截止：<strong class="text-white">2026/05/22</strong></span>
           </div>
+          <p class="mt-3 text-xs text-primary group-hover:underline">👉 點選此處能進入報名</p>
         </NuxtLink>
       </div>
 
@@ -93,6 +94,7 @@
         <ClientOnly>
           <SponsorSwiper :sponsors="sponsors" :api-base="apiBase" />
         </ClientOnly>
+        <p class="text-center text-gray-400 mt-6 text-sm">歡迎更多贊助商聯絡贊助</p>
       </div>
     </section>
   </div>
@@ -124,10 +126,10 @@ useSeoMeta({
   ogTitle: 'Airsoft Racing - 極限速度杯氣槍競速賽',
   description: '極限速度杯 Airsoft Contest — 氣槍競速電競賽事報名平台。4v4 搶旗模式 Speedsoft，線上報名、查看賽事與報名隊伍。',
   ogDescription: '極限速度杯 Airsoft Contest — 氣槍競速電競賽事報名平台。4v4 搶旗模式 Speedsoft，線上報名、查看賽事與報名隊伍。',
-  ogImage: `${backendBase}/public/banner.png`,
+  ogImage: `${backendBase}/public/banner.webp`,
   twitterTitle: 'Airsoft Racing - 極限速度杯氣槍競速賽',
   twitterDescription: '極限速度杯 Airsoft Contest — 4v4 搶旗模式 Speedsoft 氣槍競速電競賽事，立即線上報名！',
-  twitterImage: `${backendBase}/public/banner.png`,
+  twitterImage: `${backendBase}/public/banner.webp`,
 })
 
 const { data: tournaments, pending, error } = await useFetch<Tournament[]>('/tournaments', {
