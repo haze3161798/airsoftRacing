@@ -74,8 +74,8 @@
             {{ t.description }}
           </p>
           <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
-            <span>🏁 比賽日期：<strong class="text-white">2025/06/07（六）</strong></span>
-            <span>📋 報名截止：<strong class="text-white">2025/05/22</strong></span>
+            <span>🏁 比賽日期：<strong class="text-white">2026/06/07（六）</strong></span>
+            <span>📋 報名截止：<strong class="text-white">2026/05/22</strong></span>
           </div>
         </NuxtLink>
       </div>
