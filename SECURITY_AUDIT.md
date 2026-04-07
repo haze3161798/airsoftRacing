@@ -121,9 +121,10 @@
 - **問題**：若 DB 中 URL 被竄改為 `//evil.com`，前端會直接導向
 - **修復**：驗證 URL 必須為相對路徑或白名單域名
 
-### 18. Devtools 生產環境未關閉
+### 18. Devtools 生產環境未關閉 ✅ 已修復
 - **位置**：`frontend/nuxt.config.ts:4`
 - **問題**：`devtools: { enabled: true }` 應在 production 關閉
+- **✅ 修復內容**（2026-04-08）：改為 `process.env.NODE_ENV !== 'production'`，僅開發環境啟用
 
 ### 19. .gitignore 不完整
 - **問題**：缺少 `*.pem`、`*.key`、`.env.production`、`.vscode/`、`npm-debug.log*` 等

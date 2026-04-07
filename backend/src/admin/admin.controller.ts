@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Patch,
+  Delete,
   Param,
   Body,
   Query,
@@ -50,5 +51,11 @@ export class AdminController {
   @UseGuards(AdminGuard)
   reviewTeam(@Param('id') id: string, @Body() dto: ReviewTeamDto) {
     return this.adminService.reviewTeam(id, dto);
+  }
+
+  @Delete('teams/:id')
+  @UseGuards(AdminGuard)
+  deleteTeam(@Param('id') id: string) {
+    return this.adminService.deleteTeam(id);
   }
 }

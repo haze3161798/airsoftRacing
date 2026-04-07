@@ -136,7 +136,13 @@
                 @click="reviewTeam(team.id, 'PENDING')"
               >
                 重設為審核中
-
+              </button>
+              <button
+                class="bg-red-900/30 hover:bg-red-800/50 text-red-400 font-semibold px-4 py-2 rounded-lg text-sm border border-red-800/50 transition-colors sm:ml-auto"
+                :disabled="reviewing === team.id"
+                @click="openDeleteDialog(team.id, team.teamName)"
+              >
+                刪除隊伍
               </button>
             </div>
           </div>
@@ -179,6 +185,32 @@
         </div>
       </div>
     </Teleport>
+
+    <!-- Delete Dialog -->
+    <Teleport to="body">
+      <div v-if="deleteDialog.show" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+        <div class="bg-surface-light border border-red-800/50 rounded-xl p-6 w-full max-w-md">
+          <h3 class="text-lg font-bold text-red-400 mb-4">刪除隊伍</h3>
+          <p class="text-gray-300 text-sm mb-6">
+            確定要刪除隊伍「<span class="text-white font-bold">{{ deleteDialog.teamName }}</span>」嗎？此操作無法復原，所有隊員資料將一併刪除。
+          </p>
+          <div class="flex gap-3 justify-end">
+            <button
+              class="bg-surface-lighter hover:bg-surface-border text-gray-300 font-semibold px-4 py-2 rounded-lg text-sm border border-surface-border transition-colors"
+              @click="deleteDialog.show = false"
+            >
+              取消
+            </button>
+            <button
+              class="bg-red-700 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-colors"
+              @click="confirmDelete"
+            >
+              確認刪除
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -213,6 +245,12 @@ const rejectDialog = reactive({
   show: false,
   teamId: '',
   reason: '',
+})
+
+const deleteDialog = reactive({
+  show: false,
+  teamId: '',
+  teamName: '',
 })
 
 const filterOptions = [
@@ -342,6 +380,36 @@ function openRejectDialog(teamId: string) {
 async function confirmReject() {
   rejectDialog.show = false
   await reviewTeam(rejectDialog.teamId, 'FAILED', rejectDialog.reason || undefined)
+}
+
+function openDeleteDialog(teamId: string, teamName: string) {
+  deleteDialog.teamId = teamId
+  deleteDialog.teamName = teamName
+  deleteDialog.show = true
+}
+
+async function confirmDelete() {
+  const teamId = deleteDialog.teamId
+  deleteDialog.show = false
+  reviewing.value = teamId
+  try {
+    await $fetch(`/admin/teams/${teamId}`, {
+      baseURL: config.public.apiBase as string,
+      method: 'DELETE',
+      headers: authHeaders(),
+    })
+    teams.value = teams.value.filter(t => t.id !== teamId)
+    expanded.delete(teamId)
+  } catch (err: any) {
+    if (err?.status === 401) {
+      adminToken.value = null
+      router.replace('/admin')
+      return
+    }
+    alert(err?.data?.message || '刪除失敗')
+  } finally {
+    reviewing.value = null
+  }
 }
 
 function handleLogout() {

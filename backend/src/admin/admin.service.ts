@@ -166,4 +166,17 @@ export class AdminService {
       },
     });
   }
+
+  async deleteTeam(id: string) {
+    const team = await this.prisma.team.findUnique({ where: { id } });
+    if (!team) {
+      throw new NotFoundException('隊伍不存在');
+    }
+
+    // Delete players first, then team
+    await this.prisma.player.deleteMany({ where: { teamId: id } });
+    await this.prisma.team.delete({ where: { id } });
+
+    return { message: '隊伍已刪除' };
+  }
 }
