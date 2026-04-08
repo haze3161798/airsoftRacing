@@ -67,3 +67,25 @@ export interface Sponsor {
   createdAt?: string
   updatedAt?: string
 }
+
+export interface PrizeTag {
+  id: string
+  name: string
+  sortOrder: number
+  createdAt?: string
+  updatedAt?: string
+  _count?: { prizes: number }
+}
+
+export interface Prize {
+  id: string
+  name: string
+  description: string | null
+  isFeatured: boolean
+  isActive: boolean
+  sortOrder: number
+  sponsor: { id: string; name: string } | null
+  prizeTag: { id: string; name: string } | null
+  createdAt?: string
+  updatedAt?: string
+}

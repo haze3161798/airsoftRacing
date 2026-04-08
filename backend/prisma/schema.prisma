@@ -76,5 +76,41 @@ model Sponsor {
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
+  prizes Prize[]
+
   @@map("sponsor")
+}
+
+model PrizeTag {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(100)
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  prizes Prize[]
+
+  @@map("prize_tag")
+}
+
+model Prize {
+  id            String    @id @default(uuid())
+  sponsorId     String?   @map("sponsor_id")
+  prizeTagId    String?   @map("prize_tag_id")
+  name          String    @db.VarChar(200)
+  description   String?   @db.Text
+  imageData     Bytes     @map("image_data")
+  imageMimeType String    @db.VarChar(50) @map("image_mime_type")
+  isFeatured    Boolean   @default(false) @map("is_featured")
+  isActive      Boolean   @default(true) @map("is_active")
+  sortOrder     Int       @default(0) @map("sort_order")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  sponsor  Sponsor?  @relation(fields: [sponsorId], references: [id], onDelete: SetNull)
+  prizeTag PrizeTag? @relation(fields: [prizeTagId], references: [id], onDelete: SetNull)
+
+  @@index([sponsorId])
+  @@index([prizeTagId])
+  @@map("prize")
 }

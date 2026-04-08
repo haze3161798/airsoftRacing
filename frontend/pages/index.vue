@@ -87,6 +87,27 @@
     </section>
     </div>
 
+    <!-- Featured Prizes -->
+    <section v-if="featuredPrizes?.length" class="py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold text-white mb-8 text-center">精選獎品</h2>
+        <ClientOnly>
+          <PrizeSwiper :prizes="featuredPrizes" :api-base="apiBase" />
+        </ClientOnly>
+        <div class="text-center mt-8">
+          <NuxtLink
+            to="/prizes"
+            class="inline-flex items-center gap-2 bg-primary hover:bg-primary/80 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors"
+          >
+            查看更多獎品
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
     <!-- Sponsors Carousel -->
     <section v-if="sponsors?.length" class="py-12 bg-surface-light">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -101,7 +122,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Tournament, Sponsor } from '~/types'
+import type { Tournament, Sponsor, Prize } from '~/types'
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase as string
@@ -139,6 +160,11 @@ const { data: tournaments, pending, error } = await useFetch<Tournament[]>('/tou
 const { data: sponsors } = useLazyFetch<Sponsor[]>('/sponsors', {
   baseURL: apiBase,
   key: 'public-sponsors',
+})
+
+const { data: featuredPrizes } = useLazyFetch<Prize[]>('/prizes/featured', {
+  baseURL: apiBase,
+  key: 'featured-prizes',
 })
 
 // Use the active tournament's banner from backend

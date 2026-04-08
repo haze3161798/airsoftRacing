@@ -21,6 +21,13 @@
           >
             贊助商管理
           </NuxtLink>
+          <NuxtLink
+            to="/admin/prizes"
+            class="text-sm text-gray-400 hover:text-white transition-colors"
+            active-class="!text-primary font-semibold"
+          >
+            獎品管理
+          </NuxtLink>
         </nav>
       </div>
     </header>

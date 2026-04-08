@@ -17,6 +17,9 @@
           <NuxtLink to="/tournament/season-1/teams" class="nav-link hover:text-primary transition-colors">
             查看報名隊伍
           </NuxtLink>
+          <NuxtLink to="/prizes" class="nav-link hover:text-primary transition-colors">
+            獎品一覽
+          </NuxtLink>
           <a
             v-if="pdfUrl"
             :href="pdfUrl"
@@ -71,6 +74,13 @@
               @click="mobileMenuOpen = false"
             >
               查看報名隊伍
+            </NuxtLink>
+            <NuxtLink
+              to="/prizes"
+              class="block text-gray-300 hover:text-primary transition-colors py-2"
+              @click="mobileMenuOpen = false"
+            >
+              獎品一覽
             </NuxtLink>
             <a
               v-if="pdfUrl"

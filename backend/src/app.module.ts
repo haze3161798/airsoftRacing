@@ -8,6 +8,8 @@ import { TournamentModule } from './tournament/tournament.module';
 import { RegistrationModule } from './registration/registration.module';
 import { AdminModule } from './admin/admin.module';
 import { SponsorModule } from './sponsor/sponsor.module';
+import { PrizeTagModule } from './prize-tag/prize-tag.module';
+import { PrizeModule } from './prize/prize.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { SponsorModule } from './sponsor/sponsor.module';
     RegistrationModule,
     AdminModule,
     SponsorModule,
+    PrizeTagModule,
+    PrizeModule,
   ],
   providers: [
     {
