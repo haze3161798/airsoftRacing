@@ -96,7 +96,7 @@
             </button>
             <h3 class="text-lg font-bold text-white mb-4">繳費資訊</h3>
             <div class="space-y-3 text-sm text-gray-300">
-              <p>每隊報名費：<span class="text-white font-semibold">5,500 元</span></p>
+              <p>每隊報名費：<span class="text-white font-semibold">4,000 元</span></p>
               <p>收款人：<span class="text-white font-semibold">吳文元</span></p>
               <p>匯款資料：<span class="text-white font-semibold">（700）00410771562859</span></p>
               <p class="text-accent-pending">付款後請向收款人進行資料核對，核對完成後就完美報名成功了！</p>
