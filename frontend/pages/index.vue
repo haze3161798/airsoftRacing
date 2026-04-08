@@ -89,7 +89,7 @@
           <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
             <span>🏁 比賽日期：<strong class="text-white">2026/06/07（日）</strong></span>
             <span>📋 報名截止：<strong class="text-white">2026/05/22</strong></span>
-            <span>💰 報名費：<strong class="text-white">4,500 元/隊</strong></span>
+            <span>💰 報名費：<strong class="text-white">4,500 元/隊</strong>（原價 5,500 元，已減免 1,000 元）</span>
           </div>
           <p class="mt-3 text-xs text-primary group-hover:underline">👉 點選此處能進入報名</p>
         </NuxtLink>

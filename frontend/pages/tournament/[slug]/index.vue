@@ -50,6 +50,9 @@
               為鼓勵新秀參賽，隊伍中成員若為 <strong class="text-red-400">18 歲（含）以下</strong>，每位選手可再折抵 <strong class="text-red-400">200 元</strong>。
             </li>
           </ul>
+          <p class="text-gray-400 text-xs">
+            💰 每隊報名費：<strong class="text-white">4,500 元</strong>（原價 5,500 元，已減免 1,000 元）
+          </p>
         </div>
       </div>
 
@@ -85,6 +88,18 @@
           </svg>
           下載規則 PDF
         </a>
+
+        <a
+          :href="consentFormUrl"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center justify-center gap-2 bg-surface-lighter hover:bg-surface-border text-white font-semibold px-6 py-3 rounded-lg border border-surface-border transition-colors text-center"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          未成年家長同意書
+        </a>
       </div>
 
       <!-- Payment Info -->
@@ -115,7 +130,7 @@
             </button>
             <h3 class="text-lg font-bold text-white mb-4">繳費資訊</h3>
             <div class="space-y-3 text-sm text-gray-300">
-              <p>每隊報名費：<span class="text-white font-semibold">4,500 元</span></p>
+              <p>每隊報名費：<span class="text-white font-semibold">4,500 元</span>（原價 5,500 元，已減免 1,000 元）</p>
               <p>收款人：<span class="text-white font-semibold">吳文元</span></p>
               <p>匯款資料：<span class="text-white font-semibold">（700）00410771562859</span></p>
               <p class="text-accent-pending">付款後請向收款人進行資料核對，核對完成後就完美報名成功了！</p>
@@ -149,6 +164,11 @@ const showPaymentDialog = ref(false)
 const qrCodeSrc = computed(() => {
   const base = (config.public.apiBase as string).replace(/\/api$/, '')
   return `${base}/public/line-qrcode.png`
+})
+
+const consentFormUrl = computed(() => {
+  const base = (config.public.apiBase as string).replace(/\/api$/, '')
+  return `${base}/public/consent-form.pdf`
 })
 
 const pdfFullUrl = computed(() => {
