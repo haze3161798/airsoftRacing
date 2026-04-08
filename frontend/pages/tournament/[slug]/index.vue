@@ -32,6 +32,25 @@
       <!-- Description -->
       <div v-if="tournament.description" class="bg-surface-light border border-surface-border rounded-xl p-6 mb-6">
         <p class="text-gray-300 whitespace-pre-line">{{ tournament.description }}</p>
+        <hr class="border-surface-border my-5" />
+        <div class="text-gray-300 text-sm leading-relaxed">
+          <p class="mb-3">各位參賽者您好：</p>
+          <p class="mb-3">
+            因場地因素，本次比賽將延後至
+            <strong class="text-red-400">6 月 7 日（日）</strong>
+            舉辦。造成各位在行程安排上的不便，主辦單位深感抱歉。為表達我們的誠意並回饋選手的支持，本次報名費用調整如下：
+          </p>
+          <ul class="pl-5 space-y-2 mb-3">
+            <li>
+              <strong class="text-white">1. 人人有感補償：</strong><br />
+              報名費直接減免 <strong class="text-red-400">1,000 元</strong>，由我們承擔這份不便。
+            </li>
+            <li>
+              <strong class="text-white">2. 年輕選手加碼：</strong><br />
+              為鼓勵新秀參賽，隊伍中成員若為 <strong class="text-red-400">18 歲（含）以下</strong>，每位選手可再折抵 <strong class="text-red-400">200 元</strong>。
+            </li>
+          </ul>
+        </div>
       </div>
 
       <!-- Actions -->
@@ -96,7 +115,7 @@
             </button>
             <h3 class="text-lg font-bold text-white mb-4">繳費資訊</h3>
             <div class="space-y-3 text-sm text-gray-300">
-              <p>每隊報名費：<span class="text-white font-semibold">4,000 元</span></p>
+              <p>每隊報名費：<span class="text-white font-semibold">4,500 元</span></p>
               <p>收款人：<span class="text-white font-semibold">吳文元</span></p>
               <p>匯款資料：<span class="text-white font-semibold">（700）00410771562859</span></p>
               <p class="text-accent-pending">付款後請向收款人進行資料核對，核對完成後就完美報名成功了！</p>

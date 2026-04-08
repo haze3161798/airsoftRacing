@@ -14,13 +14,26 @@
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-2">
       <div class="relative border-2 border-orange-500 rounded-xl p-6 bg-orange-500/10 backdrop-blur">
         <h3 class="text-center text-xl font-bold text-orange-400 mb-4">
-          ⚠️ 賽事日期異動與早鳥優惠公告 ⚠️
+          ⚠️ 重要公告 ⚠️
         </h3>
         <p class="text-gray-200 leading-relaxed mb-3">
-          非常抱歉地通知大家，因場地協調因素，我們的比賽將延後至
-          <strong class="text-red-400">6 月 7 日（日）</strong>
-          舉辦。造成大家的困擾，主辦單位真的非常抱歉！🙇‍♂️
+          各位參賽者您好：
         </p>
+        <p class="text-gray-200 leading-relaxed mb-3">
+          因場地因素，本次比賽將延後至
+          <strong class="text-red-400">6 月 7 日（日）</strong>
+          舉辦。造成各位在行程安排上的不便，主辦單位深感抱歉。為表達我們的誠意並回饋選手的支持，本次報名費用調整如下：
+        </p>
+        <ul class="text-gray-200 leading-loose mb-4 pl-5 space-y-2">
+          <li>
+            <strong class="text-white">1. 人人有感補償：</strong><br />
+            報名費直接減免 <strong class="text-red-400">1,000 元</strong>，由我們承擔這份不便。
+          </li>
+          <li>
+            <strong class="text-white">2. 年輕選手加碼：</strong><br />
+            為鼓勵新秀參賽，隊伍中成員若為 <strong class="text-red-400">18 歲（含）以下</strong>，每位選手可再折抵 <strong class="text-red-400">200 元</strong>。
+          </li>
+        </ul>
         <p class="text-gray-200 leading-relaxed mb-2">
           雖然比賽延期，但好康福利沒有少！<br />
           📌 <strong class="text-white">最新時程與優惠：</strong>
@@ -76,7 +89,7 @@
           <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
             <span>🏁 比賽日期：<strong class="text-white">2026/06/07（日）</strong></span>
             <span>📋 報名截止：<strong class="text-white">2026/05/22</strong></span>
-            <span>💰 報名費：<strong class="text-white">4,000 元/隊</strong></span>
+            <span>💰 報名費：<strong class="text-white">4,500 元/隊</strong></span>
           </div>
           <p class="mt-3 text-xs text-primary group-hover:underline">👉 點選此處能進入報名</p>
         </NuxtLink>
