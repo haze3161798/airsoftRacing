@@ -10,6 +10,19 @@
      
     </section>
 
+    <!-- Prize Page Button -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 text-center">
+      <NuxtLink
+        to="/prizes"
+        class="inline-flex items-center gap-2 bg-primary hover:bg-primary/80 text-white font-bold px-8 py-3 rounded-lg text-lg transition-colors shadow-lg"
+      >
+        🏆 獎品一覽
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </NuxtLink>
+    </div>
+
     <!-- Announcement Banner -->
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-2">
       <div class="relative border-2 border-orange-500 rounded-xl p-6 bg-orange-500/10 backdrop-blur">
@@ -101,8 +114,8 @@
     </section>
     </div>
 
-    <!-- Featured Prizes -->
-    <section v-if="featuredPrizes?.length" class="py-12">
+    <!-- Featured Prizes (暫時隱藏，模組保留) -->
+    <section v-if="false && featuredPrizes?.length" class="py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl font-bold text-white mb-8 text-center">精選獎品</h2>
         <ClientOnly>
