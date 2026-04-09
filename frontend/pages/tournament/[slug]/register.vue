@@ -6,6 +6,29 @@
 
     <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-8">隊伍報名</h2>
 
+    <!-- Solo Registration Info -->
+    <div class="relative border-2 border-primary rounded-xl p-6 bg-primary/10 backdrop-blur mb-8">
+      <h3 class="text-lg font-bold text-primary mb-3">
+        🙋 沒隊友也能戰！個人報名專區
+      </h3>
+      <p class="text-gray-200 text-sm leading-relaxed mb-3">
+        想參賽但找不到隊友嗎？別擔心，主辦方幫你湊！
+      </p>
+      <ol class="text-gray-200 text-sm leading-loose pl-5 space-y-1 list-decimal">
+        <li>
+          <strong class="text-white">先聯繫：</strong>私訊網頁下方的
+          <a href="https://www.instagram.com/cyyc_airsoft/" target="_blank" rel="noopener" class="text-primary hover:text-primary/80 underline transition-colors">IG</a>
+          讓主辦方知道你有意願（適合 1-2 人報名）。
+        </li>
+        <li>
+          <strong class="text-white">幫組隊：</strong>只要湊滿 4 人，我們就會幫大家組成戰隊。
+        </li>
+        <li>
+          <strong class="text-white">安心報名：</strong>如果最後人數湊不齊，我們會主動聯絡並全額退費。
+        </li>
+      </ol>
+    </div>
+
     <!-- Step Indicator -->
     <div class="flex items-center mb-10">
       <template v-for="(stepLabel, i) in steps" :key="i">

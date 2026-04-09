@@ -29,6 +29,17 @@
             獎品管理
           </NuxtLink>
         </nav>
+        <div class="ml-auto">
+          <NuxtLink
+            to="/"
+            class="text-sm text-gray-400 hover:text-white transition-colors inline-flex items-center gap-1"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            回到前台
+          </NuxtLink>
+        </div>
       </div>
     </header>
     <slot />

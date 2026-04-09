@@ -60,12 +60,8 @@
             >
               {{ p.isActive ? '上架中' : '已下架' }}
             </span>
-            <span
-              v-if="p.isFeatured"
-              class="bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full text-xs font-bold shrink-0"
-            >
-              精選
-            </span>
+            <!-- 精選標籤暫時隱藏 -->
+
           </div>
           <div class="text-xs text-gray-500 truncate">
             {{ p.sponsor ? `贊助：${p.sponsor.name}` : '（無贊助商）' }}
@@ -97,15 +93,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          <button
-            :class="p.isFeatured
-              ? 'text-yellow-400 hover:text-yellow-300'
-              : 'text-gray-400 hover:text-yellow-400'"
-            class="transition-colors text-xs font-semibold px-2 py-1 rounded border border-surface-border"
-            @click="toggleFeatured(p)"
-          >
-            {{ p.isFeatured ? '取消精選' : '設為精選' }}
-          </button>
+          <!-- 設為精選按鈕暫時隱藏 -->
           <button
             :class="p.isActive
               ? 'text-accent-pending hover:text-yellow-400'
@@ -203,7 +191,7 @@
                   ? 'border-primary bg-primary/10 scale-[1.02]'
                   : 'border-surface-border hover:border-primary/50'
               ]"
-              @click="($refs.fileInput as HTMLInputElement)?.click()"
+              @click="() => { if (fileInput) { fileInput.value = ''; fileInput.click() } }"
               @dragover.prevent="dragging = true"
               @dragenter.prevent="dragging = true"
               @dragleave.prevent="dragging = false"
@@ -396,6 +384,7 @@ const tags = ref<PrizeTag[]>([])
 const sponsors = ref<Sponsor[]>([])
 const loading = ref(true)
 const dragging = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
 
 const formDialog = reactive({
   show: false,
@@ -427,8 +416,10 @@ function authHeaders(): Record<string, string> {
   return { Authorization: `Bearer ${adminToken.value}` }
 }
 
+const imageCacheBuster = ref(Date.now())
+
 function prizeImageUrl(id: string) {
-  return `${apiBase}/prizes/${id}/image`
+  return `${apiBase}/prizes/${id}/image?t=${imageCacheBuster.value}`
 }
 
 // ─── Load Data ───
@@ -548,6 +539,7 @@ async function submitForm() {
     }
 
     formDialog.show = false
+    imageCacheBuster.value = Date.now()
     await loadAll()
   } catch (err: any) {
     formDialog.error = err?.data?.message || '儲存失敗'

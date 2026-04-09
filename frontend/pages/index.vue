@@ -135,6 +135,33 @@
       </div>
     </section>
 
+    <!-- Solo Registration -->
+    <section class="py-12">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative border-2 border-primary rounded-xl p-6 bg-primary/10 backdrop-blur">
+          <h3 class="text-center text-xl font-bold text-primary mb-4">
+            🙋 沒隊友也能戰！個人報名專區
+          </h3>
+          <p class="text-gray-200 leading-relaxed mb-4">
+            想參賽但找不到隊友嗎？別擔心，主辦方幫你湊！
+          </p>
+          <ol class="text-gray-200 leading-loose mb-4 pl-5 space-y-2 list-decimal">
+            <li>
+              <strong class="text-white">先聯繫：</strong>私訊網頁下方的
+              <a href="https://www.instagram.com/cyyc_airsoft/" target="_blank" rel="noopener" class="text-primary hover:text-primary/80 underline transition-colors">IG</a>
+              讓主辦方知道你有意願（適合 1-2 人報名）。
+            </li>
+            <li>
+              <strong class="text-white">幫組隊：</strong>只要湊滿 4 人，我們就會幫大家組成戰隊。
+            </li>
+            <li>
+              <strong class="text-white">安心報名：</strong>如果最後人數湊不齊，我們會主動聯絡並全額退費。
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
     <!-- Sponsors Carousel -->
     <section v-if="sponsors?.length" class="py-12 bg-surface-light">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

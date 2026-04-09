@@ -48,7 +48,7 @@ export class PrizeController {
     res.set({
       'Content-Type': imageMimeType,
       'Content-Length': String(buffer.length),
-      'Cache-Control': 'public, max-age=86400',
+      'Cache-Control': 'public, max-age=300',
     });
     res.end(buffer);
   }
