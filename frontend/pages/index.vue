@@ -165,7 +165,8 @@
     <!-- Sponsors Carousel -->
     <section v-if="sponsors?.length" class="py-12 bg-surface-light">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl font-bold text-white mb-8 text-center">贊助夥伴</h2>
+        <h2 class="text-2xl font-bold text-white mb-2 text-center">贊助夥伴</h2>
+        <p class="text-sm text-gray-400 mb-8 text-center">點選下方 LOGO 可進入贊助商網站</p>
         <ClientOnly>
           <SponsorSwiper :sponsors="sponsors" :api-base="apiBase" />
         </ClientOnly>
