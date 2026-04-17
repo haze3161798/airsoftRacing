@@ -69,7 +69,7 @@
                       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 text-sm">
                         <div v-for="player in team.players" :key="player.name" class="flex items-center gap-2">
                           <span :class="roleColor(player.role)" class="text-xs font-bold shrink-0">{{ roleLabel(player.role) }}</span>
-                          <span class="text-white">{{ player.name }}</span>
+                          <span class="text-white">{{ maskName(player.name) }}</span>
                         </div>
                       </div>
                     </div>
@@ -124,6 +124,14 @@ const expandedTeam = ref<string | null>(null)
 
 function toggleExpand(teamName: string) {
   expandedTeam.value = expandedTeam.value === teamName ? null : teamName
+}
+
+function maskName(name: string) {
+  const trimmed = (name || '').trim()
+  if (!trimmed) return ''
+  const chars = Array.from(trimmed)
+  if (chars.length <= 1) return trimmed
+  return chars[0] + '〇'.repeat(chars.length - 1)
 }
 
 function roleLabel(role: string) {
