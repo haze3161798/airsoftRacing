@@ -47,6 +47,11 @@
             為鼓勵新秀參賽，隊伍中成員若為 <strong class="text-red-400">18 歲（含）以下</strong>，每位選手可再折抵 <strong class="text-red-400">200 元</strong>。
           </li>
         </ul>
+        <div class="text-gray-200 leading-relaxed mb-4 pl-5 space-y-1 text-sm">
+          <p>💰 <strong class="text-white">每隊報名費：</strong></p>
+          <p class="pl-5">職業組：<strong class="text-red-400">4,500 元</strong>（原價 5,500 元，已減免 1,000 元）</p>
+          <p class="pl-5">娛樂組：<strong class="text-red-400">2,500 元</strong>（原價 3,500 元，已減免 1,000 元）</p>
+        </div>
         <p class="text-gray-200 leading-relaxed mb-2">
           雖然比賽延期，但好康福利沒有少！<br />
           📌 <strong class="text-white">最新時程與優惠：</strong>
@@ -80,9 +85,9 @@
         無法載入賽事資料，請稍後再試。
       </div>
 
-      <div v-else-if="tournaments?.length" class="flex flex-wrap justify-center gap-4">
+      <div v-else-if="sortedTournaments.length" class="flex flex-wrap justify-center gap-4">
         <NuxtLink
-          v-for="t in tournaments"
+          v-for="t in sortedTournaments"
           :key="t.id"
           :to="`/tournament/${t.slug}`"
           class="group block w-full sm:w-80 bg-surface-light border border-surface-border rounded-xl p-6 hover:border-primary/50 hover:bg-surface-lighter transition-all duration-200"
@@ -102,7 +107,7 @@
           <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
             <span>🏁 比賽日期：<strong class="text-white">2026/06/07（日）</strong></span>
             <span>📋 報名截止：<strong class="text-white">2026/05/22</strong></span>
-            <span>💰 報名費：<strong class="text-white">4,500 元/隊</strong>（原價 5,500 元，已減免 1,000 元）</span>
+            <span>💰 報名費：<strong class="text-white">{{ getTournamentFee(t.slug).current }} 元/隊</strong>（原價 {{ getTournamentFee(t.slug).original }} 元，已減免 1,000 元）</span>
           </div>
           <p class="mt-3 text-xs text-primary group-hover:underline">👉 點選此處能進入報名</p>
         </NuxtLink>
@@ -139,9 +144,10 @@
     <section class="py-12">
       <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative border-2 border-primary rounded-xl p-6 bg-primary/10 backdrop-blur">
-          <h3 class="text-center text-xl font-bold text-primary mb-4">
+          <h3 class="text-center text-xl font-bold text-primary mb-2">
             🙋 沒隊友也能戰！個人報名專區
           </h3>
+          <p class="text-center text-white font-semibold mb-4">職業組 / 娛樂組皆開放單人報名</p>
           <p class="text-gray-200 leading-relaxed mb-4">
             想參賽但找不到隊友嗎？別擔心，主辦方幫你湊！
           </p>
@@ -149,15 +155,22 @@
             <li>
               <strong class="text-white">先聯繫：</strong>私訊網頁下方的
               <a href="https://www.instagram.com/cyyc_airsoft/" target="_blank" rel="noopener" class="text-primary hover:text-primary/80 underline transition-colors">IG</a>
-              讓主辦方知道你有意願（適合 1-2 人報名）。
+              讓主辦方知道你有意願（適合 1-2 人報名），並<strong class="text-white">註明想報名的組別（職業組 / 娛樂組）</strong>。
             </li>
             <li>
-              <strong class="text-white">幫組隊：</strong>只要湊滿 4 人，我們就會幫大家組成戰隊。
+              <strong class="text-white">幫組隊：</strong>只要湊滿 4 人，我們就會依組別幫大家組成戰隊。
             </li>
             <li>
-              <strong class="text-white">安心報名：</strong>如果最後人數湊不齊，我們會主動聯絡並全額退費。
+              <strong class="text-white">安心報名：</strong>若最後人數湊不齊，我們會主動聯絡並全額退費。
             </li>
           </ol>
+          <div class="mt-5 pt-5 border-t border-primary/30 text-gray-200 text-sm leading-relaxed">
+            <p class="mb-2">💡 <strong class="text-white">不確定哪一組適合你？</strong></p>
+            <ul class="pl-5 space-y-1 list-disc">
+              <li><strong class="text-white">職業組</strong>：追求積分、強度對抗的老手玩家</li>
+              <li><strong class="text-white">娛樂組</strong>：想輕鬆體驗 Speedsoft 的新手玩家，門檻更友善</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -228,5 +241,18 @@ const bannerSrc = computed(() => {
   const path = active?.bannerUrl
   if (!path) return null
   return path.startsWith('/') ? `${backendBase}${path}` : path
+})
+
+function getTournamentFee(slug: string) {
+  if (slug === 'season-1-fun') return { current: '2,500', original: '3,500' }
+  return { current: '4,500', original: '5,500' }
+}
+
+// 職業組 (season-1) 永遠排最前
+const sortedTournaments = computed(() => {
+  const list = tournaments.value || []
+  const pro = list.find(t => t.slug === 'season-1')
+  const others = list.filter(t => t.slug !== 'season-1')
+  return pro ? [pro, ...others] : list
 })
 </script>

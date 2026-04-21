@@ -11,27 +11,113 @@
 
         <!-- Desktop nav -->
         <nav aria-label="主選單" class="hidden md:flex items-center gap-6 text-sm text-gray-300">
-          <NuxtLink to="/tournament/season-1" class="nav-link hover:text-primary transition-colors">
-            立即報名
-          </NuxtLink>
-          <NuxtLink to="/tournament/season-1/teams" class="nav-link hover:text-primary transition-colors">
-            查看報名隊伍
-          </NuxtLink>
+          <!-- 立即報名 下拉 -->
+          <div class="relative group">
+            <button
+              type="button"
+              class="nav-link hover:text-primary transition-colors inline-flex items-center gap-1"
+            >
+              立即報名
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+              <div class="bg-surface-light border border-surface-border rounded-lg shadow-lg min-w-[180px] py-2">
+                <NuxtLink
+                  to="/tournament/season-1/register"
+                  class="block px-4 py-2 text-gray-300 hover:bg-surface-lighter hover:text-primary transition-colors"
+                >
+                  職業組報名
+                </NuxtLink>
+                <NuxtLink
+                  to="/tournament/season-1-fun/register"
+                  class="block px-4 py-2 text-gray-300 hover:bg-surface-lighter hover:text-primary transition-colors"
+                >
+                  娛樂組報名
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+
+          <!-- 查看報名隊伍 下拉 -->
+          <div class="relative group">
+            <button
+              type="button"
+              class="nav-link hover:text-primary transition-colors inline-flex items-center gap-1"
+            >
+              查看報名隊伍
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+              <div class="bg-surface-light border border-surface-border rounded-lg shadow-lg min-w-[180px] py-2">
+                <NuxtLink
+                  to="/tournament/season-1/teams"
+                  class="block px-4 py-2 text-gray-300 hover:bg-surface-lighter hover:text-primary transition-colors"
+                >
+                  職業組隊伍
+                </NuxtLink>
+                <NuxtLink
+                  to="/tournament/season-1-fun/teams"
+                  class="block px-4 py-2 text-gray-300 hover:bg-surface-lighter hover:text-primary transition-colors"
+                >
+                  娛樂組隊伍
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+
           <NuxtLink to="/prizes" class="nav-link hover:text-primary transition-colors">
             獎品一覽
           </NuxtLink>
-          <a
-            v-if="pdfUrl"
-            :href="pdfUrl"
-            target="_blank"
-            rel="noopener"
-            class="nav-link hover:text-primary transition-colors inline-flex items-center gap-1"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            下載規則 (PDF)
-          </a>
+
+          <!-- 下載 下拉 -->
+          <div class="relative group">
+            <button
+              type="button"
+              class="nav-link hover:text-primary transition-colors inline-flex items-center gap-1"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              下載 (PDF)
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div class="absolute top-full right-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+              <div class="bg-surface-light border border-surface-border rounded-lg shadow-lg min-w-[200px] py-2">
+                <a
+                  v-if="proPdfUrl"
+                  :href="proPdfUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="block px-4 py-2 text-gray-300 hover:bg-surface-lighter hover:text-primary transition-colors"
+                >
+                  職業組規則
+                </a>
+                <a
+                  v-if="funPdfUrl"
+                  :href="funPdfUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="block px-4 py-2 text-gray-300 hover:bg-surface-lighter hover:text-primary transition-colors"
+                >
+                  娛樂組規則
+                </a>
+                <a
+                  :href="consentFormUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="block px-4 py-2 text-gray-300 hover:bg-surface-lighter hover:text-primary transition-colors"
+                >
+                  未成年家長同意書
+                </a>
+              </div>
+            </div>
+          </div>
         </nav>
 
         <!-- Mobile hamburger button -->
@@ -60,41 +146,127 @@
         leave-to-class="opacity-0 -translate-y-2"
       >
         <div v-if="mobileMenuOpen" class="md:hidden bg-surface-light border-b border-surface-border">
-          <nav aria-label="行動版選單" class="px-4 py-4 space-y-3 text-sm">
-            <NuxtLink
-              to="/tournament/season-1"
-              class="block text-gray-300 hover:text-primary transition-colors py-2"
-              @click="mobileMenuOpen = false"
+          <nav aria-label="行動版選單" class="px-4 py-4 space-y-1 text-sm">
+            <!-- 立即報名 -->
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-gray-300 hover:text-primary transition-colors py-2"
+              @click="mobileExpanded.register = !mobileExpanded.register"
             >
-              立即報名
-            </NuxtLink>
-            <NuxtLink
-              to="/tournament/season-1/teams"
-              class="block text-gray-300 hover:text-primary transition-colors py-2"
-              @click="mobileMenuOpen = false"
+              <span>立即報名</span>
+              <svg
+                :class="['w-4 h-4 transition-transform', mobileExpanded.register && 'rotate-180']"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div v-if="mobileExpanded.register" class="pl-4 space-y-1">
+              <NuxtLink
+                to="/tournament/season-1/register"
+                class="block text-gray-400 hover:text-primary transition-colors py-2"
+                @click="closeMobileMenu"
+              >
+                職業組報名
+              </NuxtLink>
+              <NuxtLink
+                to="/tournament/season-1-fun/register"
+                class="block text-gray-400 hover:text-primary transition-colors py-2"
+                @click="closeMobileMenu"
+              >
+                娛樂組報名
+              </NuxtLink>
+            </div>
+
+            <!-- 查看報名隊伍 -->
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-gray-300 hover:text-primary transition-colors py-2"
+              @click="mobileExpanded.teams = !mobileExpanded.teams"
             >
-              查看報名隊伍
-            </NuxtLink>
+              <span>查看報名隊伍</span>
+              <svg
+                :class="['w-4 h-4 transition-transform', mobileExpanded.teams && 'rotate-180']"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div v-if="mobileExpanded.teams" class="pl-4 space-y-1">
+              <NuxtLink
+                to="/tournament/season-1/teams"
+                class="block text-gray-400 hover:text-primary transition-colors py-2"
+                @click="closeMobileMenu"
+              >
+                職業組隊伍
+              </NuxtLink>
+              <NuxtLink
+                to="/tournament/season-1-fun/teams"
+                class="block text-gray-400 hover:text-primary transition-colors py-2"
+                @click="closeMobileMenu"
+              >
+                娛樂組隊伍
+              </NuxtLink>
+            </div>
+
             <NuxtLink
               to="/prizes"
               class="block text-gray-300 hover:text-primary transition-colors py-2"
-              @click="mobileMenuOpen = false"
+              @click="closeMobileMenu"
             >
               獎品一覽
             </NuxtLink>
-            <a
-              v-if="pdfUrl"
-              :href="pdfUrl"
-              target="_blank"
-              rel="noopener"
-              class="flex items-center gap-1 text-gray-300 hover:text-primary transition-colors py-2"
-              @click="mobileMenuOpen = false"
+
+            <!-- 下載 PDF -->
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-gray-300 hover:text-primary transition-colors py-2"
+              @click="mobileExpanded.pdf = !mobileExpanded.pdf"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                下載 (PDF)
+              </span>
+              <svg
+                :class="['w-4 h-4 transition-transform', mobileExpanded.pdf && 'rotate-180']"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
-              下載規則 (PDF)
-            </a>
+            </button>
+            <div v-if="mobileExpanded.pdf" class="pl-4 space-y-1">
+              <a
+                v-if="proPdfUrl"
+                :href="proPdfUrl"
+                target="_blank"
+                rel="noopener"
+                class="block text-gray-400 hover:text-primary transition-colors py-2"
+                @click="closeMobileMenu"
+              >
+                職業組規則
+              </a>
+              <a
+                v-if="funPdfUrl"
+                :href="funPdfUrl"
+                target="_blank"
+                rel="noopener"
+                class="block text-gray-400 hover:text-primary transition-colors py-2"
+                @click="closeMobileMenu"
+              >
+                娛樂組規則
+              </a>
+              <a
+                :href="consentFormUrl"
+                target="_blank"
+                rel="noopener"
+                class="block text-gray-400 hover:text-primary transition-colors py-2"
+                @click="closeMobileMenu"
+              >
+                未成年家長同意書
+              </a>
+            </div>
           </nav>
         </div>
       </Transition>
@@ -143,6 +315,11 @@ import type { Tournament } from '~/types'
 
 const config = useRuntimeConfig()
 const mobileMenuOpen = ref(false)
+const mobileExpanded = reactive({
+  register: false,
+  teams: false,
+  pdf: false,
+})
 const backendBase = (config.public.apiBase as string).replace(/\/api$/, '')
 const logoSrc = `${backendBase}/public/logo.svg`
 const faviconSrc = `${backendBase}/public/favicon.svg`
@@ -151,28 +328,38 @@ useHead({
   link: [{ rel: 'icon', type: 'image/svg+xml', href: faviconSrc }],
 })
 
-// Fetch active tournament to get PDF URL
+function closeMobileMenu() {
+  mobileMenuOpen.value = false
+}
+
+// Fetch all tournaments to get each division's PDF URL
 const { data: tournaments } = await useFetch<Tournament[]>('/tournaments', {
   baseURL: config.public.apiBase as string,
 })
 
-const activeTournament = computed(() => tournaments.value?.find(t => t.isActive))
-
-const pdfUrl = computed(() => {
-  const path = activeTournament.value?.rulesPdfUrl
+function resolvePdfUrl(path: string | null | undefined): string | null {
   if (!path) return null
-  // If it's a relative path, prepend the API base (without /api)
-  if (path.startsWith('/')) {
-    const base = (config.public.apiBase as string).replace(/\/api$/, '')
-    return `${base}${path}`
-  }
+  if (path.startsWith('/')) return `${backendBase}${path}`
   return path
-})
+}
+
+const proPdfUrl = computed(() =>
+  resolvePdfUrl(tournaments.value?.find(t => t.slug === 'season-1')?.rulesPdfUrl),
+)
+
+const funPdfUrl = computed(() =>
+  resolvePdfUrl(tournaments.value?.find(t => t.slug === 'season-1-fun')?.rulesPdfUrl),
+)
+
+const consentFormUrl = `${backendBase}/public/consent-form.pdf`
 
 // Close mobile menu on route change
 const route = useRoute()
 watch(() => route.fullPath, () => {
   mobileMenuOpen.value = false
+  mobileExpanded.register = false
+  mobileExpanded.teams = false
+  mobileExpanded.pdf = false
 })
 </script>
 
