@@ -41,6 +41,13 @@ export default defineNuxtConfig({
     serveStatic: true,
   },
 
+  routeRules: {
+    // HTML 頁面：每次都向伺服器驗證，避免 Safari/Chrome 快取舊版
+    '/**': { headers: { 'cache-control': 'no-cache' } },
+    // JS/CSS bundle 檔名帶 hash，可安全長快取
+    '/_nuxt/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
+  },
+
   // Browser compatibility: support last 2 years of mainstream browsers
   vite: {
     build: {
