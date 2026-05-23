@@ -14,12 +14,18 @@
 airsoftRacing/
 ├── frontend/          # Nuxt 3 (port 3000)
 │   ├── pages/
-│   │   ├── index.vue                        # Homepage with banner + tournament list
-│   │   ├── tournament/[slug]/index.vue      # Tournament detail
-│   │   ├── tournament/[slug]/register.vue   # Multi-step registration wizard
-│   │   ├── tournament/[slug]/teams.vue      # Public team list (name + status only)
+│   │   ├── index.vue                        # Homepage + tournament list (sorted: 職業組置頂)
+│   │   ├── tournament/[slug]/*              # Dynamic fallback route (now unused; reserved)
+│   │   ├── tournament/season-1/             # 職業組獨立頁面 (slug 硬寫；費用 4,500)
+│   │   │   ├── index.vue                    #   - 賽事詳情、繳費 Dialog
+│   │   │   ├── register.vue                 #   - 多步驟報名 wizard
+│   │   │   └── teams.vue                    #   - 公開隊伍列表
+│   │   ├── tournament/season-1-fun/         # 娛樂組獨立頁面 (slug 硬寫；費用 2,500)
+│   │   │   ├── index.vue
+│   │   │   ├── register.vue
+│   │   │   └── teams.vue
 │   │   ├── admin/index.vue                  # Admin login
-│   │   └── admin/dashboard.vue              # Admin review panel
+│   │   └── admin/dashboard.vue              # Admin review panel (tournament selector 自動列出)
 │   ├── layouts/       # default.vue (public), admin.vue (admin panel)
 │   ├── components/    # StatusBadge, AppButton
 │   ├── composables/   # useApi, useCrypto (AES decrypt)
@@ -51,6 +57,10 @@ airsoftRacing/
 - **Banner & logo images** served from backend `/public/` directory
 - **PDF rules** served from backend, URL stored in tournament `rulesPdfUrl` field
 - **Payment info**: dialog with bank transfer details, LINE QR code, and captain group link
+- **多組賽事 UI**：職業組（`season-1`）與娛樂組（`season-1-fun`）採「暴力複製 Vue 檔」方式做成獨立兩頁，**不抽共用元件**（PO 偏好 simple over DRY for one-off event sites）
+- **Header 下拉選單**：立即報名 / 查看報名隊伍 / 下載 PDF 三個項目各自 hover 展開顯示兩組
+- **Data migration**：新賽事透過 `prisma/migrations/*/migration.sql` 寫 INSERT...ON CONFLICT DO NOTHING，部署時 `prisma migrate deploy` 自動執行
+- **HTTP cache control**（[nuxt.config.ts](frontend/nuxt.config.ts)）：HTML 路徑 `no-cache` 強制重新驗證、`/_nuxt/*` immutable 長快取，避免 Safari 用 heuristic 快取殘留舊版
 
 ## API Endpoints
 | Method | Endpoint | Auth | Description |
@@ -64,10 +74,13 @@ airsoftRacing/
 | GET | /api/admin/teams/:id | JWT | Team detail |
 | PATCH | /api/admin/teams/:id/review | JWT | Change status (PENDING/SUCCESS/FAILED) |
 
-## Database Schema (3 tables)
+## Database Schema (5 tables)
 - **tournament**: id, slug, name, description, rulesPdfUrl, bannerUrl, registrationOpenAt/CloseAt, isActive
+  - Current rows: `season-1`（職業組）、`season-1-fun`（娛樂組），both `isActive: true`
 - **team**: id, tournamentId, teamName, status, paymentNote, rejectionReason, submittedAt, reviewedAt
 - **player**: id, teamId, tournamentId, name, phone, nationalIdHash, role, sortOrder
+- **sponsor**: id, name, imageData (bytea), imageMimeType, linkUrl, isActive, sortOrder
+- **prize_tag** / **prize**: 獎品標籤與獎品（圖片存 bytea）
 - Key constraints: `UNIQUE(tournamentId, teamName)`
 
 ## Local Development
